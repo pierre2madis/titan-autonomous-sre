@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "normalizer": {
+    "name": "cross_domain_event_normalizer",
+    "version": "1.0.0-final"
+  },
+  "identity": {
+    "event_id": "EVT-4BA3143F0B1071857F4152F2",
+    "request_id": null,
+    "evidence_id": "linux:unknown:block_io:unknown:device_service_latency",
+    "correlation_key": "linux:unknown:block_io:unknown",
+    "fingerprint": "linux:unknown:block_io:unknown:device_service_latency"
+  },
+  "source": {
+    "domain": "BLOCK_IO",
+    "provider": "UNKNOWN",
+    "host": "UNKNOWN",
+    "service": null,
+    "cluster": null,
+    "device": "UNKNOWN",
+    "role": null
+  },
+  "observation": {
+    "observed_at": "2026-09-14T02:15:27Z",
+    "window_start": null,
+    "window_end": "2026-09-14T02:15:27Z"
+  },
+  "evidence": {
+    "state": "AVAILABLE",
+    "diagnostic_type": "DEVICE_SERVICE_LATENCY",
+    "severity": "CRITICAL",
+    "confidence": "HIGH"
+  },
+  "correlation": {
+    "contribution": "SUPPORTS",
+    "evidence_role": "CAUSAL_CANDIDATE",
+    "cause_class": "BLOCK_IO_DEVICE_SERVICE_LATENCY",
+    "weight": 90
+  },
+  "incident_hints": {
+    "create_incident": false,
+    "merge_candidate": true,
+    "parent_candidate": true,
+    "propagation_candidate": true
+  },
+  "provenance": {
+    "source_contract": "DOMAIN_CORRELATION_ADAPTER",
+    "canonicalized": true
+  }
+}

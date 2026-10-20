@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "normalizer": {
+    "name": "cross_domain_event_normalizer",
+    "version": "1.0.0-final"
+  },
+  "identity": {
+    "event_id": "EVT-SPLUNK-INDEX-001",
+    "request_id": null,
+    "evidence_id": "EVID-SPLUNK-INDEX-001",
+    "correlation_key": "splunk:us2:indexing",
+    "fingerprint": "splunk:us2:indexing:degradation"
+  },
+  "source": {
+    "domain": "SPLUNK",
+    "provider": "SPLUNK",
+    "host": "us2",
+    "service": "splunkd",
+    "cluster": "splunk-lab",
+    "device": null,
+    "role": "INDEXER"
+  },
+  "observation": {
+    "observed_at": "2026-09-14T04:01:00Z",
+    "window_start": null,
+    "window_end": null
+  },
+  "evidence": {
+    "state": "AVAILABLE",
+    "diagnostic_type": "INDEXING_DEGRADATION",
+    "severity": "CRITICAL",
+    "confidence": "HIGH"
+  },
+  "correlation": {
+    "contribution": "SUPPORTS",
+    "evidence_role": "CAUSAL_CANDIDATE",
+    "cause_class": "SPLUNK_INDEXING_DEGRADATION",
+    "weight": 90
+  },
+  "incident_hints": {
+    "create_incident": false,
+    "merge_candidate": true,
+    "parent_candidate": false,
+    "propagation_candidate": true
+  },
+  "provenance": {
+    "source_contract": "DOMAIN_CORRELATION_ADAPTER",
+    "canonicalized": true
+  }
+}

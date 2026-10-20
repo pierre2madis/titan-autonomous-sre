@@ -1,0 +1,28 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*
+*secrets*
+
+# Runtime and temporary files
+*.log
+*.tmp
+*.swp
+*.bak
+*.pyc
+__pycache__/
+.cache/
+tmp/
+temp/
+output/
+reports/
+
+# Local development
+.vscode/
+.idea/
+.DS_Store

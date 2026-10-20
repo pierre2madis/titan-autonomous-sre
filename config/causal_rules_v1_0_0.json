@@ -1,0 +1,407 @@
+{
+  "schema_version": "1.0",
+
+  "registry": {
+    "name": "cross_domain_causal_rule_registry",
+    "version": "1.0.0",
+    "status": "CANDIDATE",
+
+    "scoring": {
+      "EXACT": 20,
+      "GENERIC": 14,
+      "DOMAIN": 8
+    }
+  },
+
+  "rules": [
+    {
+      "rule_id": "CPU_SCHEDULER_TO_SPLUNK_INDEXING_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "CPU",
+        "cause_class": "CPU_SCHEDULER_CONTENTION"
+      },
+
+      "target": {
+        "domain": "SPLUNK",
+        "diagnostic_type": "INDEXING_DEGRADATION"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 300
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_CLUSTER"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "CPU_SCHEDULER_TO_SPLUNK_SEARCH_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "CPU",
+        "cause_class": "CPU_SCHEDULER_CONTENTION"
+      },
+
+      "target": {
+        "domain": "SPLUNK",
+        "diagnostic_type": "SEARCH_DEGRADATION"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 180
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_CLUSTER"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "CPU_RUNQUEUE_TO_APPLICATION_LATENCY_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "CPU",
+        "cause_class": "CPU_RUNQUEUE_PRESSURE"
+      },
+
+      "target": {
+        "domain": "APPLICATION",
+        "diagnostic_type": "APPLICATION_LATENCY"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 120
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_SERVICE",
+          "UPSTREAM_DEPENDENCY"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "MEMORY_PRESSURE_TO_APPLICATION_LATENCY_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "MEMORY",
+        "cause_class": "MEMORY_PRESSURE"
+      },
+
+      "target": {
+        "domain": "APPLICATION",
+        "diagnostic_type": "APPLICATION_LATENCY"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 180
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_SERVICE"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "SWAP_PRESSURE_TO_PROCESS_DEGRADATION_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "MEMORY",
+        "cause_class": "SWAP_PRESSURE"
+      },
+
+      "target": {
+        "domain": "APPLICATION",
+        "diagnostic_type": "PROCESS_DEGRADATION"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 300
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "BLOCK_IO_QUEUE_TO_SPLUNK_INDEXING_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "BLOCK_IO",
+        "cause_class": "BLOCK_IO_QUEUE_CONTENTION"
+      },
+
+      "target": {
+        "domain": "SPLUNK",
+        "diagnostic_type": "INDEXING_DEGRADATION"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 300
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_DEVICE",
+          "SAME_CLUSTER"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "BLOCK_IO_SERVICE_TO_SPLUNK_INDEXING_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "BLOCK_IO",
+        "cause_class": "BLOCK_IO_DEVICE_SERVICE_LATENCY"
+      },
+
+      "target": {
+        "domain": "SPLUNK",
+        "diagnostic_type": "INDEXING_DEGRADATION"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 300
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_DEVICE",
+          "SAME_CLUSTER"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "BLOCK_IO_MIXED_TO_APPLICATION_LATENCY_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "BLOCK_IO",
+        "cause_class": "BLOCK_IO_MIXED_CONTENTION"
+      },
+
+      "target": {
+        "domain": "APPLICATION",
+        "diagnostic_type": "APPLICATION_LATENCY"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 300
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_SERVICE",
+          "UPSTREAM_DEPENDENCY"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "BLOCK_IO_REQUEUE_TO_SPLUNK_INGESTION_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "BLOCK_IO",
+        "cause_class": "BLOCK_IO_REQUEUE_PRESSURE"
+      },
+
+      "target": {
+        "domain": "SPLUNK",
+        "diagnostic_type": "INGESTION_DELAY"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 300
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_HOST",
+          "SAME_CLUSTER"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "NETWORK_PACKET_LOSS_TO_REMOTE_SERVICE_FAILURE_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "NETWORK",
+        "cause_class": "NETWORK_PACKET_LOSS"
+      },
+
+      "target": {
+        "domain": "APPLICATION",
+        "diagnostic_type": "REMOTE_SERVICE_FAILURE"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 120
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_SERVICE",
+          "UPSTREAM_DEPENDENCY",
+          "DOWNSTREAM_DEPENDENCY"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "NETWORK_RETRANSMISSION_TO_APPLICATION_LATENCY_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "NETWORK",
+        "cause_class": "NETWORK_RETRANSMISSION_PRESSURE"
+      },
+
+      "target": {
+        "domain": "APPLICATION",
+        "diagnostic_type": "APPLICATION_LATENCY"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 180
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_SERVICE",
+          "UPSTREAM_DEPENDENCY",
+          "DOWNSTREAM_DEPENDENCY"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    },
+
+    {
+      "rule_id": "NETWORK_LATENCY_TO_SPLUNK_INGESTION_V1",
+      "enabled": true,
+
+      "source": {
+        "domain": "NETWORK",
+        "cause_class": "NETWORK_LATENCY"
+      },
+
+      "target": {
+        "domain": "SPLUNK",
+        "diagnostic_type": "INGESTION_DELAY"
+      },
+
+      "relationship": "CAUSE_OF",
+
+      "temporal": {
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 300
+      },
+
+      "topology": {
+        "allowed": [
+          "SAME_CLUSTER",
+          "UPSTREAM_DEPENDENCY",
+          "DOWNSTREAM_DEPENDENCY"
+        ]
+      },
+
+      "strength": "EXACT",
+      "causal_rule_points": 20
+    }
+  ]
+}

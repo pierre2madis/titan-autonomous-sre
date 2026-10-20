@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "normalizer": {
+    "name": "cross_domain_event_normalizer",
+    "version": "1.0.0-final"
+  },
+  "identity": {
+    "event_id": "EVT-0EDE53F1593204A2901A9925",
+    "request_id": null,
+    "evidence_id": "linux:unknown:block_io:unknown:normal_block_io",
+    "correlation_key": "linux:unknown:block_io:unknown",
+    "fingerprint": "linux:unknown:block_io:unknown:normal_block_io"
+  },
+  "source": {
+    "domain": "BLOCK_IO",
+    "provider": "UNKNOWN",
+    "host": "UNKNOWN",
+    "service": null,
+    "cluster": null,
+    "device": "UNKNOWN",
+    "role": null
+  },
+  "observation": {
+    "observed_at": "2026-09-14T02:15:24Z",
+    "window_start": null,
+    "window_end": "2026-09-14T02:15:24Z"
+  },
+  "evidence": {
+    "state": "AVAILABLE",
+    "diagnostic_type": "NORMAL_BLOCK_IO",
+    "severity": "NONE",
+    "confidence": "HIGH"
+  },
+  "correlation": {
+    "contribution": "CONTRADICTS",
+    "evidence_role": "EXONERATING",
+    "cause_class": "NONE",
+    "weight": 0
+  },
+  "incident_hints": {
+    "create_incident": false,
+    "merge_candidate": false,
+    "parent_candidate": false,
+    "propagation_candidate": false
+  },
+  "provenance": {
+    "source_contract": "DOMAIN_CORRELATION_ADAPTER",
+    "canonicalized": true
+  }
+}

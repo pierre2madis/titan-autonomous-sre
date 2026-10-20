@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "normalizer": {
+    "name": "cross_domain_event_normalizer",
+    "version": "1.0.0-final"
+  },
+  "identity": {
+    "event_id": "EVT-361CEB6B5949C31253A611B8",
+    "request_id": null,
+    "evidence_id": "linux:unknown:block_io:unknown:insufficient_evidence",
+    "correlation_key": "linux:unknown:block_io:unknown",
+    "fingerprint": "linux:unknown:block_io:unknown:insufficient_evidence"
+  },
+  "source": {
+    "domain": "BLOCK_IO",
+    "provider": "UNKNOWN",
+    "host": "UNKNOWN",
+    "service": null,
+    "cluster": null,
+    "device": "UNKNOWN",
+    "role": null
+  },
+  "observation": {
+    "observed_at": "2026-09-14T02:15:25Z",
+    "window_start": null,
+    "window_end": "2026-09-14T02:15:25Z"
+  },
+  "evidence": {
+    "state": "INSUFFICIENT",
+    "diagnostic_type": "INSUFFICIENT_EVIDENCE",
+    "severity": "UNKNOWN",
+    "confidence": "LOW"
+  },
+  "correlation": {
+    "contribution": "INDETERMINATE",
+    "evidence_role": "NON_DECISIVE",
+    "cause_class": "UNKNOWN",
+    "weight": 0
+  },
+  "incident_hints": {
+    "create_incident": false,
+    "merge_candidate": false,
+    "parent_candidate": false,
+    "propagation_candidate": false
+  },
+  "provenance": {
+    "source_contract": "DOMAIN_CORRELATION_ADAPTER",
+    "canonicalized": true
+  }
+}

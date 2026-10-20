@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "normalizer": {
+    "name": "cross_domain_event_normalizer",
+    "version": "1.0.0-final"
+  },
+  "identity": {
+    "event_id": "EVT-BLOCKIO-QUEUE-001",
+    "request_id": null,
+    "evidence_id": "EVID-BLOCKIO-QUEUE-001",
+    "correlation_key": "linux:us2:block_io:sda",
+    "fingerprint": "linux:us2:block_io:sda:queue_contention"
+  },
+  "source": {
+    "domain": "BLOCK_IO",
+    "provider": "LINUX",
+    "host": "us2",
+    "service": null,
+    "cluster": "splunk-lab",
+    "device": "sda",
+    "role": "SPLUNK_SERVER"
+  },
+  "observation": {
+    "observed_at": "2026-09-14T04:00:00Z",
+    "window_start": null,
+    "window_end": null
+  },
+  "evidence": {
+    "state": "UNAVAILABLE",
+    "diagnostic_type": "QUEUE_CONTENTION",
+    "severity": "UNKNOWN",
+    "confidence": "UNKNOWN"
+  },
+  "correlation": {
+    "contribution": "UNAVAILABLE",
+    "evidence_role": "NON_DECISIVE",
+    "cause_class": "UNKNOWN",
+    "weight": 0
+  },
+  "incident_hints": {
+    "create_incident": false,
+    "merge_candidate": false,
+    "parent_candidate": false,
+    "propagation_candidate": false
+  },
+  "provenance": {
+    "source_contract": "DOMAIN_CORRELATION_ADAPTER",
+    "canonicalized": true
+  }
+}

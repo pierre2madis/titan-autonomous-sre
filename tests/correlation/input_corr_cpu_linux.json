@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "event_id": "EVT-CPU-LINUX-001",
+    "request_id": null,
+    "evidence_id": "EVID-CPU-LINUX-001",
+    "correlation_key": "linux:us2:cpu",
+    "fingerprint": "cpu:us2:scheduler_contention"
+  },
+  "source": {
+    "domain": "CPU",
+    "provider": "LINUX",
+    "host": "us2",
+    "service": null,
+    "cluster": "splunk-lab",
+    "device": null,
+    "role": "SPLUNK_SERVER"
+  },
+  "observation": {
+    "observed_at": "2026-09-14T04:10:00Z"
+  },
+  "evidence": {
+    "state": "AVAILABLE",
+    "diagnostic_type": "CPU_SCHEDULER_CONTENTION",
+    "severity": "CRITICAL",
+    "confidence": "HIGH"
+  },
+  "correlation": {
+    "contribution": "SUPPORTS",
+    "evidence_role": "CAUSAL_CANDIDATE",
+    "cause_class": "CPU_SCHEDULER_CONTENTION",
+    "weight": 90
+  },
+  "incident_hints": {
+    "create_incident": false,
+    "merge_candidate": true,
+    "parent_candidate": false,
+    "propagation_candidate": false
+  }
+}
