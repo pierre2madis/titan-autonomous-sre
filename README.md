@@ -1,83 +1,136 @@
 # TITAN — Autonomous SRE RCA Platform
 
-**Public Preview v0.1.0**
+**Evidence-Driven Incident Correlation & Causal Analysis**
 
-TITAN is an evidence-driven Site Reliability Engineering project
-focused on cross-domain event normalization, causal correlation,
-and incident relationship assessment.
+**Release:** v0.1.0 — Initial Public Preview
+**License:** Apache 2.0
+**Status:** Offline engineering preview — Not production-ready
 
-This initial public preview provides two portable Bash components:
+[GitHub Repository](https://github.com/pierre2madis/titan-autonomous-sre) |
+[v0.1.0 Release](https://github.com/pierre2madis/titan-autonomous-sre/releases/tag/v0.1.0)
 
-- Cross-Domain Event Normalizer
-- Cross-Domain Correlation Engine
+## Why TITAN?
 
-The project demonstrates how infrastructure evidence can be
-correlated with downstream service degradation while respecting
-temporal ordering, topology constraints, and causal rule eligibility.
+Modern observability platforms can generate multiple alerts from a
+single underlying infrastructure problem.
 
-## Key Capabilities
+CPU contention, storage latency, and downstream service degradation
+may appear as separate incidents even when they are related.
+
+Investigating these symptoms independently can increase alert noise,
+complicate incident triage, and delay recovery.
+
+**TITAN explores how SRE teams can move beyond alert correlation
+toward evidence-driven causal analysis.**
+
+The approach combines temporal ordering, infrastructure topology,
+configurable causal rules, and evidence confidence.
+
+The goal is to distinguish plausible causal relationships from
+coincidental or temporally invalid correlations.
+
+## What Is Available in v0.1.0?
+
+The initial public release provides two Bash-based components.
+
+### Cross-Domain Event Normalizer
+
+Transforms validated observability inputs into canonical event JSON.
+
+Capabilities include:
 
 - Canonical cross-domain event representation
-- Rule-based causal correlation
-- Temporal propagation validation
+- Evidence state and confidence metadata
+- Infrastructure and application domain classification
+- Incident contribution hints
+- Input contract validation
+- Deterministic processing
+
+### Cross-Domain Correlation Engine
+
+Evaluates relationships between canonical events using:
+
+- Temporal ordering and propagation constraints
 - Topology-aware relationship assessment
+- Configurable causal rules
 - Evidence-based scoring
-- Incident relationship recommendations
-- Deterministic JSON fixtures
-- Offline demonstrations without production monitoring services
+- Rule eligibility validation
+- Advisory incident relationship recommendations
+
+The engine produces explainable relationship assessments.
+
+It does not establish definitive root cause or execute remediation.
 
 ## Architecture
 
 ```text
 Infrastructure / Service Evidence
-                |
-                v
+               |
+               v
        Domain Adapter Output
-                |
-                v
+               |
+               v
     Cross-Domain Event Normalizer
-                |
-                v
+               |
+               v
        Canonical Event JSON
-                |
-                v
-     Causal Correlation Engine
-                |
-                +---- Causal Rule Registry
-                |
-                v
+               |
+               v
+     Causal Correlation Engine <--- Causal Rule Registry
+               |
+               v
     Relationship Assessment JSON
-                |
-                v
+               |
+               v
      Advisory Incident Decision
 ```
 
-The initial preview includes the normalizer and correlation engine.
-It does not include every upstream adapter or a complete
-production incident-management pipeline.
+The normalizer and correlation engine are included in v0.1.0.
 
-## Requirements
+Upstream production adapters and the complete incident-management
+pipeline are outside the scope of this release.
+
+## Quick Start
+
+### Requirements
 
 - Linux
 - Bash
 - jq
-- sha256sum
-- date
+- GNU-compatible command-line utilities, including:
+  - sha256sum
+  - date
+  - awk
+  - sed
+  - tr
 
-## Offline Demonstration
+### Clone the repository
 
-Run:
+```bash
+git clone https://github.com/pierre2madis/titan-autonomous-sre.git
+cd titan-autonomous-sre
+git checkout v0.1.0
+```
+
+### Run the offline demonstration
 
 ```bash
 bash scripts/demo_causal_correlation.sh
 ```
 
-The demonstration evaluates two scenarios:
+The demonstration evaluates two predefined scenarios and validates
+their expected outcomes.
 
-### Scenario A — Temporal Causality Rejected
+No Splunk, Dynatrace, Prometheus, n8n, AWX, ServiceNow, or PagerDuty
+installation is required.
 
-CPU scheduler contention is correlated with Splunk indexing
-degradation, but the causal direction is invalid.
+## Demonstration Scenarios
+
+### Scenario A — Invalid Causal Direction
+
+CPU scheduler contention and Splunk indexing degradation are
+correlated, but their temporal relationship does not support
+the proposed causal direction.
 
 Expected relationship:
 
@@ -85,10 +138,16 @@ Expected relationship:
 CORRELATED_WITH
 ```
 
-### Scenario B — Positive Causal Relationship
+This demonstrates that temporal correlation alone is insufficient
+to establish a directional causal relationship.
+
+### Scenario B — Eligible Causal Relationship
 
 Block I/O queue contention precedes Splunk indexing degradation
 by 60 seconds.
+
+The configured rule, temporal constraints, topology, and evidence
+assessment support an eligible directional relationship.
 
 Expected relationship:
 
@@ -96,47 +155,94 @@ Expected relationship:
 CAUSE_OF
 ```
 
-The positive scenario is checked against an existing golden
-contract for the causal relationship, rule eligibility, scoring,
-temporal validation, topology, and incident recommendation.
+This is an advisory classification, not definitive root-cause proof.
+
+## Verification and Testing
+
+The initial public release has undergone independent verification:
+
+- Nine correlation golden fixtures reproduced successfully
+- 58 semantic assertions passed across correlation scenarios
+- Deterministic normalizer processing checks
+- Offline demonstration successfully executed
+- Bash syntax and JSON fixture validation
+- Repository integrity and dependency availability reviews
+
+These results describe the verified preview behavior.
+
+They do not establish production readiness or comprehensive
+security assurance.
 
 ## Safety Model
 
-TITAN distinguishes evidence correlation from causal eligibility.
+TITAN distinguishes correlation from causal eligibility.
 
-Incident recommendations in this preview are advisory only.
+The v0.1.0 correlation engine provides advisory recommendations only.
 
-The offline demonstration does not require Splunk, Dynatrace,
-n8n, AWX, ServiceNow, or PagerDuty.
+The release does not automatically:
 
-No production remediation workflow is included in this release.
+- Create production incidents
+- Trigger remediation playbooks
+- Modify monitored infrastructure
+- Execute production notification workflows
 
-## Project Status
+No autonomous remediation pipeline is included in this preview.
 
-Version: 0.1.0
+## Roadmap
 
-Release type: Public Preview
+The broader TITAN architecture is intended to incorporate:
 
-Scope: Offline normalization and causal correlation components.
+### Observability and Evidence
 
-This release is not represented as a production-ready
-autonomous remediation platform.
+- Prometheus and Alertmanager
+- Splunk and Dynatrace integrations
+- Linux and eBPF evidence collection
+- Cross-domain evidence normalization
+
+### Incident Intelligence
+
+- Event correlation and deduplication
+- Incident lifecycle management
+- Causal relationship assessment
+- SLI/SLO-based decision gates
+
+### Automation
+
+- n8n orchestration
+- ServiceNow incident management
+- PagerDuty and Slack notifications
+- Ansible AWX remediation workflows
+
+These are future integration objectives and are not represented
+as operational capabilities of the v0.1.0 public release.
 
 ## Engineering Provenance
 
-This project was developed through an iterative engineering
-process involving requirements definition, Bash implementation,
-testing, debugging, evidence validation, and release verification,
-with assistance from ChatGPT.
+TITAN is an independently directed engineering project developed
+through iterative requirements definition, architecture design,
+Bash implementation, debugging, deterministic testing,
+evidence validation, and release verification.
 
-The project owner directed the engineering requirements,
-integration decisions, testing, and validation activities.
+ChatGPT has been used as an AI-assisted engineering tool
+throughout development.
+
+The project owner directs engineering requirements, architecture
+and integration decisions, validation activities, and publication.
+
+## Project Status
+
+**Current public release:** v0.1.0 — Initial Public Preview
+
+The next milestone focuses on security hardening, robustness,
+documentation improvements, and preparation for broader
+observability integrations.
 
 ## License
 
-Apache License 2.0.
+Licensed under the Apache License, Version 2.0.
 
 See [LICENSE](LICENSE).
 
-Redistribution rights for all included materials must be
-confirmed before public publication.
+Component provenance and third-party redistribution obligations
+remain subject to review. The presence of an Apache 2.0 license
+does not independently establish rights over third-party materials.
