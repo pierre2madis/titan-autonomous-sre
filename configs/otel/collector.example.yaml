@@ -1,0 +1,70 @@
+# TITAN Splunk Observability — example OpenTelemetry Collector configuration
+# Reference template. Validate against the exact Collector distribution/version
+# before use. Do not copy production credentials into this file.
+receivers:
+  splunk_enterprise:
+    collection_interval: 60s
+    cluster_master:
+      endpoint: ${env:SPLUNK_MANAGEMENT_ENDPOINT}
+      auth:
+        authenticator: basicauth/splunk
+      timeout: 10s
+      tls:
+        insecure_skip_verify: false
+
+  hostmetrics:
+    collection_interval: 30s
+    scrapers:
+      cpu: {}
+      load: {}
+      memory: {}
+      disk: {}
+      filesystem: {}
+      network: {}
+
+extensions:
+  basicauth/splunk:
+    client_auth:
+      username: ${env:SPLUNK_API_USER}
+      password: ${env:SPLUNK_API_PASSWORD}
+
+processors:
+  resource/splunk:
+    attributes:
+      - key: service.name
+        value: titan-splunk-cluster
+        action: upsert
+      - key: service.instance.id
+        value: ${env:SPLUNK_INSTANCE_ID}
+        action: upsert
+
+  resource/host:
+    attributes:
+      - key: service.name
+        value: titan-otel-host
+        action: upsert
+      - key: service.instance.id
+        value: ${env:OTEL_HOST_INSTANCE_ID}
+        action: upsert
+
+  batch: {}
+
+exporters:
+  debug:
+    verbosity: basic
+  prometheus_remote_write:
+    endpoint: ${env:PROMETHEUS_REMOTE_WRITE_URL}
+    resource_to_telemetry_conversion:
+      enabled: true
+
+service:
+  extensions: [basicauth/splunk]
+  pipelines:
+    metrics/splunk:
+      receivers: [splunk_enterprise]
+      processors: [resource/splunk, batch]
+      exporters: [debug, prometheus_remote_write]
+    metrics/host:
+      receivers: [hostmetrics]
+      processors: [resource/host, batch]
+      exporters: [debug, prometheus_remote_write]
