@@ -35,3 +35,4 @@ jobs:
       - name: Run CPU scenario tests
         run: |
           python3 linux-ebpf/tests/test_cpu_scenario_v0_1.py
+          python3 linux-ebpf/tests/test_cpu_adapter_v0_2.py
