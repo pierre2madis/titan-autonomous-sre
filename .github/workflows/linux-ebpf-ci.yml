@@ -1,0 +1,37 @@
+name: TITAN Linux eBPF CI
+
+on:
+  push:
+    paths:
+      - "linux-ebpf/**"
+      - ".github/workflows/linux-ebpf-ci.yml"
+  pull_request:
+    paths:
+      - "linux-ebpf/**"
+      - ".github/workflows/linux-ebpf-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Bash syntax
+        run: |
+          bash -n linux-ebpf/simulators/cpu/cpu_replay_v0_1.sh
+          bash -n linux-ebpf/simulators/cpu/cpu_scenario_v0_1.sh
+
+      - name: Validate Grafana dashboard JSON
+        run: |
+          python3 -m json.tool \
+            linux-ebpf/dashboards/grafana/titan_cpu_overview_v0_1.json \
+            > /dev/null
+
+      - name: Run CPU scenario tests
+        run: |
+          python3 linux-ebpf/tests/test_cpu_scenario_v0_1.py
