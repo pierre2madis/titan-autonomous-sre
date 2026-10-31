@@ -83,12 +83,27 @@ def main():
         if graph.get("synthetic") is not True:
             raise ValueError("INVALID_GRAPH_TYPE")
 
-        incident_id = decision["incident_id"]
         child_id = decision["child_event_id"]
         parent = scenario["parent"]
         child = scenario["child"]
 
         incidents = graph["incidents"]
+
+        incident_id = decision["incident_id"]
+        child_id = decision["child_event_id"]
+        # Enforce global child-event ownership while holding the graph lock.
+
+        for owner_id, owner in incidents.items():
+            if not isinstance(owner, dict):
+                raise ValueError("INVALID_GRAPH_INCIDENT")
+
+            children = owner.get("children")
+
+            if not isinstance(children, dict):
+                raise ValueError("INVALID_GRAPH_CHILDREN")
+
+            if child_id in children and owner_id != incident_id:
+                raise ValueError("GLOBAL_CHILD_EVENT_CONFLICT")
 
         if incident_id not in incidents:
             incidents[incident_id] = {

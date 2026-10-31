@@ -93,3 +93,40 @@ Designed and validated a persistent synthetic multi-signal
 incident correlation prototype with temporal association,
 idempotency, parent-state consistency, and cooperative
 concurrency safeguards.
+
+## Global Child Identity Integrity
+
+The incident graph enforces global child-event ownership within a
+single persistent graph file.
+
+### Ownership rules
+
+- A child event ID can belong to only one parent incident.
+- An identical child ID under another incident is rejected with
+  `GLOBAL_CHILD_EVENT_CONFLICT`.
+- Ownership validation executes while holding the graph file lock.
+- Rejected ownership conflicts do not modify the persisted graph.
+- Existing replay idempotence and parent identity checks remain active.
+
+### Validation
+
+- 06G-1: Cross-incident collision reproduced.
+- 06G-2: Global ownership enforcement and regression tests passed.
+- 06G-3: Concurrent competing attachments resulted in one accepted
+  attachment and one rejected attachment.
+- 06G-4: Rejected collision preserved the graph SHA-256.
+
+### Scope and limitations
+
+This implementation provides local graph-level uniqueness.
+
+It does not provide:
+
+- Distributed uniqueness across independent graph files or hosts.
+- Distributed locking or consensus.
+- Atomic transactions spanning CPU state and graph state.
+- Confirmed causality between CPU pressure and ingestion pressure.
+- Production telemetry ingestion or automatic remediation.
+
+The relationship remains `TEMPORALLY_ASSOCIATED`, with
+`causality_confirmed=false`.
