@@ -1,0 +1,22 @@
+{
+  "contract_version": "0.2",
+  "scenario_id": "CPU-02",
+  "synthetic": true,
+  "fingerprint": "linux:cpu:CPU_PSI_PRESSURE",
+  "incident": {
+    "incident_id": null,
+    "occurrence": 0,
+    "state": "NO_INCIDENT",
+    "active": false,
+    "created_at": null,
+    "last_observed_at": null,
+    "resolved_at": null,
+    "observation_count": 0
+  },
+  "policy": {
+    "deduplication": "SAME_FINGERPRINT_WHILE_ACTIVE",
+    "new_occurrence_after_resolution": true,
+    "recovery_consecutive_normal": 1,
+    "persistence": "LOCAL_JSON"
+  }
+}
