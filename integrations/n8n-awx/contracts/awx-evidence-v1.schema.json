@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/titan/contracts/awx-evidence-v1.schema.json",
+  "title": "TITAN AWX Remote Diagnostic Evidence v1.0 (nominal success)",
+  "description": "Draft schema for the validated successful single-host example; not yet a complete failure/timeout evidence contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source", "collector", "domain", "evidence_type", "job", "execution", "evidence", "incident_candidate", "remediation_performed", "ansible"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "source": {"const": "AWX"},
+    "collector": {"const": "n8n"},
+    "domain": {"const": "LINUX"},
+    "evidence_type": {"const": "REMOTE_DIAGNOSTIC"},
+    "job": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "template_id", "status", "failed", "started_at", "finished_at", "elapsed_seconds"],
+      "properties": {
+        "id": {"type": "integer", "minimum": 1},
+        "template_id": {"type": "integer", "minimum": 1},
+        "status": {"const": "successful"},
+        "failed": {"const": false},
+        "started_at": {"type": "string", "format": "date-time"},
+        "finished_at": {"type": "string", "format": "date-time"},
+        "elapsed_seconds": {"type": "number", "minimum": 0}
+      }
+    },
+    "execution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["hosts_ok", "hosts_failed", "hosts_unreachable", "play_count", "task_count"],
+      "properties": {
+        "hosts_ok": {"type": "integer", "minimum": 0},
+        "hosts_failed": {"type": "integer", "minimum": 0},
+        "hosts_unreachable": {"type": "integer", "minimum": 0},
+        "play_count": {"type": "integer", "minimum": 0},
+        "task_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["available", "quality", "classification", "ansible_stats_verified", "non_intrusive_execution"],
+      "properties": {
+        "available": {"const": true},
+        "quality": {"enum": ["VALID", "REVIEW_REQUIRED"]},
+        "classification": {"const": "DIAGNOSTIC_EXECUTION_SUCCESS"},
+        "ansible_stats_verified": {"const": true},
+        "non_intrusive_execution": {"type": "boolean"}
+      }
+    },
+    "incident_candidate": {"type": "boolean"},
+    "remediation_performed": {"type": "boolean"},
+    "ansible": {
+      "type": "object", "additionalProperties": false,
+      "required": ["event_id", "event_type", "playbook", "host", "recap"],
+      "properties": {
+        "event_id": {"type": "integer", "minimum": 1},
+        "event_type": {"const": "playbook_on_stats"},
+        "playbook": {"type": "string", "minLength": 1},
+        "host": {"type": "string", "minLength": 1},
+        "recap": {
+          "type": "object", "additionalProperties": false,
+          "required": ["ok", "changed", "failures", "dark", "skipped", "rescued", "ignored"],
+          "properties": {
+            "ok": {"type": "integer", "minimum": 0},
+            "changed": {"type": "integer", "minimum": 0},
+            "failures": {"type": "integer", "minimum": 0},
+            "dark": {"type": "integer", "minimum": 0},
+            "skipped": {"type": "integer", "minimum": 0},
+            "rescued": {"type": "integer", "minimum": 0},
+            "ignored": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    }
+  }
+}
