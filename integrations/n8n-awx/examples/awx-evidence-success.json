@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "source": "AWX",
+  "collector": "n8n",
+  "domain": "LINUX",
+  "evidence_type": "REMOTE_DIAGNOSTIC",
+  "job": {
+    "id": 101,
+    "template_id": 8,
+    "status": "successful",
+    "failed": false,
+    "started_at": "2026-01-01T12:00:00Z",
+    "finished_at": "2026-01-01T12:00:07Z",
+    "elapsed_seconds": 7.0
+  },
+  "execution": {
+    "hosts_ok": 1,
+    "hosts_failed": 0,
+    "hosts_unreachable": 0,
+    "play_count": 1,
+    "task_count": 2
+  },
+  "evidence": {
+    "available": true,
+    "quality": "VALID",
+    "classification": "DIAGNOSTIC_EXECUTION_SUCCESS",
+    "ansible_stats_verified": true,
+    "non_intrusive_execution": true
+  },
+  "incident_candidate": false,
+  "remediation_performed": false,
+  "ansible": {
+    "event_id": 202,
+    "event_type": "playbook_on_stats",
+    "playbook": "remote-diagnostic.yml",
+    "host": "example-host",
+    "recap": {
+      "ok": 2,
+      "changed": 0,
+      "failures": 0,
+      "dark": 0,
+      "skipped": 0,
+      "rescued": 0,
+      "ignored": 0
+    }
+  }
+}

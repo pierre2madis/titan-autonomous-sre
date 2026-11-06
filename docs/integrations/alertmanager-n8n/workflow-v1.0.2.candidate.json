@@ -1,0 +1,149 @@
+{
+  "name": "TITAN-ALERTMANAGER-INGESTION-V1.0.2-CANDIDATE",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "nodes": [
+    {
+      "id": "titan-webhook-01",
+      "name": "Receive Alertmanager",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "titan-alertmanager-ingestion-v1",
+        "responseMode": "responseNode",
+        "options": {},
+        "authentication": "headerAuth"
+      }
+    },
+    {
+      "id": "titan-code-02",
+      "name": "Validate and Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const MAX_ALERTS = 100;\nconst MAX_BYTES = 262144;\nconst MAX_STRING = 512;\n\nconst isObj = x =>\n  x !== null && typeof x === 'object' && !Array.isArray(x);\n\nconst reject = reason => [{\n  json: {\n    accepted: false,\n    contract_version: '1.0.2',\n    reason,\n    remediation_allowed: false,\n    execution_mode: 'OBSERVE_ONLY'\n  }\n}];\n\nconst validTimestamp = value => {\n  if (typeof value !== 'string') return false;\n\n  const pattern =\n    /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-](?:0\\d|1[0-4]):[0-5]\\d)$/;\n\n  if (!pattern.test(value)) return false;\n\n  const timestamp = Date.parse(value);\n  if (!Number.isFinite(timestamp)) return false;\n\n  const match = value.match(\n    /^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})/\n  );\n\n  if (!match) return false;\n\n  const [, year, month, day, hour, minute, second] =\n    match.map(Number);\n\n  if (year < 1 || month < 1 || month > 12 ||\n      hour > 23 || minute > 59 || second > 59)\n    return false;\n\n  const daysInMonth =\n    new Date(Date.UTC(year, month, 0)).getUTCDate();\n\n  return day >= 1 && day <= daysInMonth;\n};\n\nconst incoming = $input.first().json;\nconst body = incoming.body;\n\nif (!isObj(body)) return reject('INVALID_BODY');\n\nlet serialized;\n\ntry {\n  serialized = JSON.stringify(body);\n} catch {\n  return reject('INVALID_JSON');\n}\n\nif (typeof serialized !== 'string')\n  return reject('INVALID_JSON');\n\nconst byteSize = new TextEncoder().encode(serialized).length;\n\nif (byteSize > MAX_BYTES)\n  return reject('PAYLOAD_TOO_LARGE');\n\nif (body.version !== '4')\n  return reject('UNSUPPORTED_VERSION');\n\nif (!['firing', 'resolved'].includes(body.status))\n  return reject('INVALID_STATUS');\n\nif (!Array.isArray(body.alerts) ||\n    body.alerts.length < 1 ||\n    body.alerts.length > MAX_ALERTS)\n  return reject('INVALID_ALERT_COUNT');\n\nif (typeof body.groupKey !== 'string' ||\n    !body.groupKey ||\n    body.groupKey.length > MAX_STRING)\n  return reject('INVALID_GROUP_KEY');\n\nif (typeof body.receiver !== 'string' ||\n    !body.receiver ||\n    body.receiver.length > MAX_STRING)\n  return reject('INVALID_RECEIVER');\n\nconst events = [];\n\nfor (const a of body.alerts) {\n  if (!isObj(a) || !isObj(a.labels))\n    return reject('INVALID_ALERT');\n\n  if (typeof a.fingerprint !== 'string' ||\n      !/^[a-fA-F0-9]{8,128}$/.test(a.fingerprint))\n    return reject('INVALID_FINGERPRINT');\n\n  if (!['firing', 'resolved'].includes(a.status))\n    return reject('INVALID_ALERT_STATUS');\n\n  if (typeof a.labels.alertname !== 'string' ||\n      !a.labels.alertname ||\n      a.labels.alertname.length > MAX_STRING)\n    return reject('INVALID_ALERT_NAME');\n\n  if (!validTimestamp(a.startsAt))\n    return reject('INVALID_START_TIME');\n\n  if (a.endsAt !== undefined &&\n      !validTimestamp(a.endsAt))\n    return reject('INVALID_END_TIME');\n\n  if (a.endsAt &&\n      Date.parse(a.endsAt) < Date.parse(a.startsAt))\n    return reject('INVALID_TIME_ORDER');\n\n  events.push({\n    source: 'ALERTMANAGER',\n    alert_status: a.status,\n    fingerprint: a.fingerprint.toLowerCase(),\n    alert_name: a.labels.alertname,\n    target: typeof a.labels.instance === 'string'\n      ? a.labels.instance.slice(0, MAX_STRING) : '',\n    severity: typeof a.labels.severity === 'string'\n      ? a.labels.severity.slice(0, MAX_STRING) : '',\n    starts_at: a.startsAt,\n    ends_at: a.endsAt || '',\n    remediation_allowed: false\n  });\n}\n\nreturn [{\n  json: {\n    accepted: true,\n    contract_version: '1.0.2',\n    alert_count: events.length,\n    events,\n    remediation_allowed: false,\n    execution_mode: 'OBSERVE_ONLY'\n  }\n}];"
+      }
+    },
+    {
+      "id": "titan-decision-03",
+      "name": "Accepted?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "titan-accepted-condition",
+              "leftValue": "={{ $json.accepted }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "titan-response-200",
+      "name": "Respond 200",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        180
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({accepted: $json.accepted,contract_version: \"1.0.2\",execution_mode: \"OBSERVE_ONLY\"}) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "titan-response-400",
+      "name": "Respond 400",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        420
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({accepted: false,contract_version: \"1.0.2\",reason: $json.reason,execution_mode: \"OBSERVE_ONLY\"}) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Receive Alertmanager": {
+      "main": [
+        [
+          {
+            "node": "Validate and Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Normalize": {
+      "main": [
+        [
+          {
+            "node": "Accepted?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Accepted?": {
+      "main": [
+        [
+          {
+            "node": "Respond 200",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 400",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
