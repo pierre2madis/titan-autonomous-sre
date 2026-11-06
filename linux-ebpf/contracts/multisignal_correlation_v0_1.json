@@ -1,0 +1,25 @@
+{
+  "contract_version": "0.1",
+  "synthetic": true,
+  "correlation": {
+    "parent_signal": "CPU_PSI_PRESSURE",
+    "child_signal": "SPLUNK_INGESTION_PRESSURE",
+    "window_seconds": 300,
+    "same_host_required": true,
+    "ordering": "PARENT_BEFORE_CHILD",
+    "relationship": "TEMPORALLY_ASSOCIATED",
+    "causality_confirmed": false
+  },
+  "incident_policy": {
+    "parent_incident_required": true,
+    "reuse_parent_incident_id": true,
+    "create_independent_child_incident": false,
+    "child_event_id_required": true
+  },
+  "safety": {
+    "real_telemetry": false,
+    "automatic_remediation": false,
+    "splunk_api_calls": false,
+    "node_exporter_publication": false
+  }
+}

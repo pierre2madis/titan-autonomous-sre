@@ -1,0 +1,21 @@
+{
+  "scenario_id": "06B-04_child_before_parent",
+  "contract_version": "0.1",
+  "parent": {
+    "event_id": "CPU-T1-001",
+    "host": "us02",
+    "signal": "CPU_PSI_PRESSURE",
+    "observed_at": "2026-10-30T10:05:00Z",
+    "incident_id": "TITAN-SYNTHETIC-CPU-001",
+    "incident_state": "OPEN",
+    "synthetic": true
+  },
+  "child": {
+    "event_id": "INGESTION-06B-04",
+    "host": "us02",
+    "signal": "SPLUNK_INGESTION_PRESSURE",
+    "observed_at": "2026-10-30T10:04:00Z",
+    "synthetic": true
+  },
+  "expected_action": "REJECT_ORDER"
+}

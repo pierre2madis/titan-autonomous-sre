@@ -1,0 +1,24 @@
+{
+  "contract_version": "0.4",
+  "synthetic": true,
+  "ordering": {
+    "timestamp_field": "observed_at",
+    "timestamp_format": "RFC3339",
+    "timezone_required": true,
+    "comparison": "UTC_INSTANT",
+    "older_event": "IGNORE_STALE",
+    "equal_timestamp_different_event": "REJECT_AMBIGUOUS",
+    "newer_event": "PROCESS"
+  },
+  "idempotency": {
+    "same_event_id_same_payload": "IGNORE_REPLAY",
+    "same_event_id_different_payload": "REJECT_CONFLICT",
+    "replay_check_precedes_temporal_check": true
+  },
+  "safety": {
+    "stale_event_changes_incident": false,
+    "stale_event_increments_observation_count": false,
+    "missing_timestamp": "REJECT",
+    "invalid_timestamp": "REJECT"
+  }
+}
