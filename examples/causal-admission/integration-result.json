@@ -1,0 +1,119 @@
+{
+  "scenario": "CPU_SCHEDULER_TO_SPLUNK_INDEXING",
+  "synthetic": true,
+  "causality": {
+    "relationship": "CAUSE_OF",
+    "score": 87,
+    "classification": "VERY_STRONG",
+    "rule_id": "CPU_SCHEDULER_TO_SPLUNK_INDEXING_V1"
+  },
+  "incident_proposal": {
+    "action": "ATTACH_CHILD",
+    "status": "PROPOSED",
+    "advisory_only": true,
+    "parent_incident_id": "INC-76C698FC8FCB1A16EED6C2DF",
+    "child_incident_id": "INC-20B13FEC30A78BA83860787A",
+    "root_incident_id": "INC-76C698FC8FCB1A16EED6C2DF"
+  },
+  "admission": {
+    "schema_version": "0.1",
+    "engine": {
+      "name": "titan_provenance_admission_integration",
+      "version": "0.1.1-candidate"
+    },
+    "verification": {
+      "engine_provenance_status": "MATCH"
+    },
+    "decision": {
+      "status": "ADMIT",
+      "reason": "DECLARATIVE_ADMISSION_ONLY",
+      "advisory_only": true,
+      "persisted": false,
+      "operationally_authorized": false
+    },
+    "controls": {
+      "incident_write_allowed": false,
+      "lifecycle_transition_allowed": false,
+      "remediation_allowed": false,
+      "notification_allowed": false
+    }
+  },
+  "attachment": {
+    "engine": {
+      "name": "canonical_causal_attachment_validator",
+      "version": "0.1.1-candidate"
+    },
+    "source": {
+      "expected_generation": "GEN-0000000000000008",
+      "declared_generation": "GEN-0000000000000008",
+      "registry_authenticity_verified": false,
+      "canonical_files_verified": false,
+      "causal_graph_verified": false
+    },
+    "decision": {
+      "status": "ADMIT",
+      "reason": "ROOT_TO_ROOT_ATTACHMENT_ELIGIBLE",
+      "advisory_only": true,
+      "persisted": false,
+      "operationally_authorized": false
+    },
+    "controls": {
+      "incident_write_allowed": false,
+      "lifecycle_transition_allowed": false,
+      "remediation_allowed": false,
+      "notification_allowed": false
+    }
+  },
+  "graph_consistency": {
+    "engine": {
+      "name": "canonical_graph_consistency_gate",
+      "version": "0.1.0-candidate"
+    },
+    "decision": {
+      "status": "CONSISTENT",
+      "reason": "EMPTY_GRAPH_EMPTY_HIERARCHY",
+      "advisory_only": true,
+      "operationally_authorized": false
+    },
+    "evidence": {
+      "incident_count": 2,
+      "parent_relation_count": 0,
+      "graph_node_count": 0,
+      "graph_edge_count": 0
+    },
+    "controls": {
+      "incident_write_allowed": false,
+      "lifecycle_transition_allowed": false,
+      "remediation_allowed": false
+    }
+  },
+  "advisory_plan": {
+    "engine": {
+      "name": "advisory_causal_attachment_planner",
+      "version": "0.1.0-candidate"
+    },
+    "source": {
+      "expected_generation": "GEN-0000000000000008",
+      "canonical_provenance_verified": false,
+      "authorization_verified": false
+    },
+    "prerequisites": {
+      "attachment_decision": "ADMIT",
+      "graph_consistency": "CONSISTENT"
+    },
+    "decision": {
+      "status": "PROPOSED",
+      "reason": "ATTACHMENT_PLAN_ELIGIBLE",
+      "advisory_only": true,
+      "persisted": false,
+      "operationally_authorized": false
+    },
+    "controls": {
+      "incident_write_allowed": false,
+      "lifecycle_transition_allowed": false,
+      "remediation_allowed": false,
+      "notification_allowed": false
+    }
+  },
+  "operational_mutation": false
+}
