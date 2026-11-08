@@ -1,0 +1,31 @@
+{
+  "checkpoint": "TITAN-INTEGRATION-09G",
+  "fixture_commit": "312931e380d41adc25a6582b6b2c6a9dd162068b",
+  "execution": "OFFLINE_SYNTHETIC",
+  "engine": "cross_domain_correlation_engine_v1_0_0_final.sh",
+  "scenarios": [
+    {
+      "name": "INVALID_CAUSAL_DIRECTION",
+      "source": "CPU",
+      "target": "SPLUNK",
+      "relationship": "CORRELATED_WITH",
+      "lag_seconds": -540,
+      "score": 57,
+      "recommendation": "ATTACH_EVIDENCE",
+      "validation": "PASS"
+    },
+    {
+      "name": "VALID_CAUSAL_RELATIONSHIP",
+      "source": "BLOCK_IO",
+      "target": "SPLUNK",
+      "relationship": "CAUSE_OF",
+      "lag_seconds": 60,
+      "score": 91,
+      "recommendation": "ATTACH_CHILD",
+      "advisory_only": true,
+      "validation": "PASS"
+    }
+  ],
+  "operational_mutation": false,
+  "admission_integration": "NOT_YET_VALIDATED"
+}
