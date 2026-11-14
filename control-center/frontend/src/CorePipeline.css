@@ -1,0 +1,104 @@
+.titan-pipeline {
+  margin-top: 24px;
+  padding: 24px;
+  background: #141c2b;
+  border: 1px solid #29354a;
+  border-radius: 14px;
+  color: #e8edf7;
+}
+
+.titan-pipeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.titan-pipeline-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.titan-pipeline-header p {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.titan-pipeline-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #334155;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.titan-pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.titan-pipeline-grid > div {
+  padding: 18px;
+  background: #1c293d;
+  border: 1px solid #334155;
+  border-radius: 10px;
+}
+
+.titan-pipeline-grid span {
+  display: block;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.titan-pipeline-grid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 28px;
+}
+
+.titan-pipeline-details {
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.titan-pipeline-details p {
+  color: #cbd5e1;
+}
+
+.titan-pipeline-details dl {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.titan-pipeline-details dt {
+  color: #94a3b8;
+}
+
+.titan-pipeline-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.titan-pipeline-footer {
+  margin-top: 20px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.titan-pipeline-error {
+  color: #fca5a5;
+}
+
+@media (max-width: 850px) {
+  .titan-pipeline-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .titan-pipeline-details dl {
+    grid-template-columns: 1fr;
+  }
+}

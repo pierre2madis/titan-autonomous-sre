@@ -1,0 +1,275 @@
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  color: #e5e7eb;
+  background: #0b1220;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+button { font: inherit; }
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 245px;
+  flex-shrink: 0;
+  background: #101b2e;
+  border-right: 1px solid #253247;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.brand-icon {
+  color: #38bdf8;
+  font-size: 32px;
+}
+
+.brand strong {
+  display: block;
+  font-size: 24px;
+  letter-spacing: 3px;
+}
+
+.brand small {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #94a3b8;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #94a3b8;
+}
+
+nav div {
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.nav-active {
+  color: #38bdf8;
+  background: #172d48;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  color: #94a3b8;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  margin-right: 8px;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.topbar p {
+  margin: 8px 0 0;
+  color: #94a3b8;
+}
+
+.environment {
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 9px 14px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.metric-card, .panel {
+  background: #121f33;
+  border: 1px solid #26364c;
+  border-radius: 12px;
+}
+
+.metric-card {
+  padding: 22px;
+}
+
+.metric-card span,
+.metric-card small {
+  display: block;
+  color: #94a3b8;
+}
+
+.metric-card strong {
+  display: block;
+  margin: 12px 0;
+  font-size: 32px;
+}
+
+.metric-card .mode {
+  font-size: 25px;
+  color: #38bdf8;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 18px;
+}
+
+.panel {
+  min-height: 380px;
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #26364c;
+  gap: 12px;
+}
+
+.panel-header h2 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.panel-header span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.incident-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 18px;
+  text-align: left;
+  background: transparent;
+  color: #e5e7eb;
+  border: 0;
+  border-bottom: 1px solid #26364c;
+  cursor: pointer;
+}
+
+.incident-row:hover,
+.incident-row.selected {
+  background: #172d48;
+}
+
+.incident-row span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.state {
+  display: inline-block;
+  width: fit-content;
+  padding: 5px 9px;
+  background: #503c1d;
+  color: #fbbf24 !important;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.details { padding: 22px; }
+
+.details h3 {
+  overflow-wrap: anywhere;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+dt { color: #94a3b8; }
+dd { margin: 0; overflow-wrap: anywhere; }
+
+.timeline-item {
+  border-left: 2px solid #38bdf8;
+  padding: 10px 0 15px 16px;
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  overflow-wrap: anywhere;
+}
+
+.timeline-item span,
+.timeline-item small,
+.empty {
+  color: #94a3b8;
+}
+
+.empty { padding: 20px; }
+
+.error {
+  color: #fca5a5;
+  background: #3f1d27;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+}
+
+footer {
+  color: #64748b;
+  font-size: 12px;
+  padding: 28px 0;
+}
+
+@media (max-width: 900px) {
+  .sidebar { width: 180px; }
+  .workspace { grid-template-columns: 1fr; }
+  .metrics { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .app { flex-direction: column; }
+  .sidebar { width: 100%; }
+  nav { display: none; }
+  .sidebar-footer { display: none; }
+  .main { padding: 18px; }
+  .topbar { align-items: flex-start; gap: 12px; }
+}

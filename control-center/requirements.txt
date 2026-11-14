@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+psycopg[binary]
+confluent-kafka==2.16.1

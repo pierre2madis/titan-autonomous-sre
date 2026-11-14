@@ -1,0 +1,100 @@
+.titan-workers {
+  margin-top: 24px;
+  padding: 24px;
+  background: #141c2b;
+  border: 1px solid #29354a;
+  border-radius: 14px;
+  color: #e8edf7;
+}
+
+.titan-workers-header,
+.titan-worker-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.titan-workers-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.titan-workers-header p,
+.titan-worker-topic,
+.titan-worker-reason,
+.titan-workers-footer {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.titan-workers-overall,
+.titan-worker-top span {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #334155;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.titan-workers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.titan-worker-card {
+  padding: 18px;
+  border: 1px solid #334155;
+  background: #1c293d;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.titan-worker-top strong {
+  overflow-wrap: anywhere;
+}
+
+.titan-worker-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.titan-worker-metrics small {
+  display: block;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.titan-worker-metrics strong {
+  font-size: 22px;
+}
+
+.titan-worker-partitions {
+  margin-top: 16px;
+  border-top: 1px solid #334155;
+  padding-top: 12px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.titan-worker-partitions p {
+  overflow-wrap: anywhere;
+}
+
+.titan-workers-footer {
+  margin-top: 20px;
+}
+
+.titan-workers-error {
+  color: #fca5a5;
+}
+
+@media (max-width: 850px) {
+  .titan-workers-grid {
+    grid-template-columns: 1fr;
+  }
+}
