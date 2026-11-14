@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./CorePipeline.css";
+import { useLanguage } from "./i18n/LanguageContext";
 
 type PipelineData = {
   status: string;
@@ -28,12 +29,13 @@ type PipelineData = {
   };
 };
 
-function formatDate(value: string | null): string {
-  if (!value) return "No observation";
-  return new Date(value).toLocaleString();
+function formatDate(value: string | null, locale: string, noObservation: string): string {
+  if (!value) return noObservation;
+  return new Date(value).toLocaleString(locale);
 }
 
 export default function CorePipeline() {
+  const { t, locale } = useLanguage();
   const [data, setData] = useState<PipelineData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -89,18 +91,18 @@ export default function CorePipeline() {
     <section className="titan-pipeline">
       <div className="titan-pipeline-header">
         <div>
-          <h2>Core Pipeline</h2>
-          <p>PostgreSQL evidence · Read-only</p>
+          <h2>{t('Core Pipeline')}</h2>
+          <p>{t('PostgreSQL evidence · Read-only')}</p>
         </div>
 
-        <span className="titan-pipeline-status">
-          {error ? "UNAVAILABLE" : data?.status ?? "LOADING"}
+        <span className="titan-pipeline-status" data-health-status={error ? "UNKNOWN" : data?.status ?? "UNKNOWN"}>
+          {error ? t('UNAVAILABLE') : data?.status ?? t('LOADING')}
         </span>
       </div>
 
       {error && (
         <p className="titan-pipeline-error">
-          Evidence refresh failed: {error}
+          {t('Evidence refresh failed')}: {error}
         </p>
       )}
 
@@ -108,22 +110,22 @@ export default function CorePipeline() {
         <>
           <div className="titan-pipeline-grid">
             <div>
-              <span>Events</span>
+              <span>{t('Events')}</span>
               <strong>{data.events.total}</strong>
             </div>
 
             <div>
-              <span>Pending outbox</span>
+              <span>{t('Pending outbox')}</span>
               <strong>{data.outbox.pending}</strong>
             </div>
 
             <div>
-              <span>Transitions</span>
+              <span>{t('Transitions')}</span>
               <strong>{data.transition_inbox.total}</strong>
             </div>
 
             <div>
-              <span>Open incidents</span>
+              <span>{t('Open incidents')}</span>
               <strong>{data.incidents.unresolved}</strong>
             </div>
           </div>
@@ -132,37 +134,37 @@ export default function CorePipeline() {
             <p>{data.reason}</p>
 
             <dl>
-              <dt>Activity</dt>
+              <dt>{t('Activity')}</dt>
               <dd>{data.activity}</dd>
 
-              <dt>Worker liveness</dt>
+              <dt>{t('Worker liveness')}</dt>
               <dd>{data.worker_liveness}</dd>
 
-              <dt>Outbox overdue</dt>
+              <dt>{t('Outbox overdue')}</dt>
               <dd>
                 {data.outbox.backlog_overdue ? "YES" : "NO"}
               </dd>
 
-              <dt>Last event</dt>
+              <dt>{t('Last event')}</dt>
               <dd>
-                {formatDate(data.events.last_received_at)}
+                {formatDate(data.events.last_received_at, locale, t('No observation'))}
               </dd>
 
-              <dt>Last publication</dt>
+              <dt>{t('Last publication')}</dt>
               <dd>
-                {formatDate(data.outbox.last_published_at)}
+                {formatDate(data.outbox.last_published_at, locale, t('No observation'))}
               </dd>
 
-              <dt>Last transition</dt>
+              <dt>{t('Last transition')}</dt>
               <dd>
-                {formatDate(data.transition_inbox.last_received_at)}
+                {formatDate(data.transition_inbox.last_received_at, locale, t('No observation'))}
               </dd>
             </dl>
           </div>
 
           <footer className="titan-pipeline-footer">
-            Updated: {formatDate(data.checked_at)}
-            {" · "}Auto-refresh: 15s
+            {t('Updated')}: {formatDate(data.checked_at, locale, t('No observation'))}
+            {" · "}{t('Auto-refresh: 15s')}
           </footer>
         </>
       )}

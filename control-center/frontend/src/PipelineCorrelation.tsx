@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./PipelineCorrelation.css";
+import { useLanguage } from "./i18n/LanguageContext";
 
 type Worker = {
   group_id: string;
@@ -34,6 +35,7 @@ type CorrelationResponse = {
 };
 
 export default function PipelineCorrelation() {
+  const { t, locale } = useLanguage();
   const [data, setData] =
     useState<CorrelationResponse | null>(null);
 
@@ -103,22 +105,22 @@ export default function PipelineCorrelation() {
     <section className="titan-correlation">
       <header className="titan-correlation-header">
         <div>
-          <h2>Pipeline Correlation</h2>
+          <h2>{t('Pipeline Correlation')}</h2>
           <p>
-            PostgreSQL + Kafka + Worker Evidence
+            {t('PostgreSQL + Kafka + Worker Evidence')}
           </p>
         </div>
 
-        <span className="titan-correlation-status">
+        <span className="titan-correlation-status" data-health-status={error ? "UNKNOWN" : data?.status ?? "UNKNOWN"}>
           {error
-            ? "UNAVAILABLE"
-            : data?.status ?? "LOADING"}
+            ? t('UNAVAILABLE')
+            : data?.status ?? t('LOADING')}
         </span>
       </header>
 
       {error && (
         <p className="titan-correlation-error">
-          Evidence refresh failed: {error}
+          {t('Evidence refresh failed')}: {error}
         </p>
       )}
 
@@ -131,16 +133,16 @@ export default function PipelineCorrelation() {
               </p>
               <div className="titan-assessment-facts">
                 <span>
-                  Health: {data.assessment.health_status}
+                  {t('Health')}: {data.assessment.health_status}
                 </span>
                 <span>
-                  Activity: {data.assessment.activity_state}
+                  {t('Activity')}: {data.assessment.activity_state}
                 </span>
                 <span>
-                  Confidence: {data.assessment.confidence}
+                  {t('Confidence')}: {data.assessment.confidence}
                 </span>
                 <span>
-                  Liveness: {data.assessment.worker_liveness}
+                  {t('Liveness')}: {data.assessment.worker_liveness}
                 </span>
               </div>
             </div>
@@ -148,21 +150,21 @@ export default function PipelineCorrelation() {
 
           <div className="titan-correlation-metrics">
             <div>
-              <small>Outbox pending</small>
+              <small>{t('Outbox pending')}</small>
               <strong>
                 {data.pipeline.outbox.pending}
               </strong>
             </div>
 
             <div>
-              <small>Consumer groups</small>
+              <small>{t('Consumer groups')}</small>
               <strong>
                 {data.workers.groups.length}
               </strong>
             </div>
 
             <div>
-              <small>Total consumer lag</small>
+              <small>{t('Total consumer lag')}</small>
               <strong>
                 {data.workers.groups.some(
                   (group) => group.lag === null
@@ -179,7 +181,7 @@ export default function PipelineCorrelation() {
 
           <div className="titan-correlation-details">
             <div>
-              <h3>Diagnostic reasons</h3>
+              <h3>{t('Diagnostic reasons')}</h3>
               <ul>
                 {data.reasons.map((reason, index) => (
                   <li key={index}>{reason}</li>
@@ -188,7 +190,7 @@ export default function PipelineCorrelation() {
             </div>
 
             <div>
-              <h3>Evidence</h3>
+              <h3>{t('Evidence')}</h3>
               <ul>
                 {data.evidence.map((item, index) => (
                   <li key={index}>{item}</li>
@@ -198,12 +200,12 @@ export default function PipelineCorrelation() {
           </div>
 
           <footer className="titan-correlation-footer">
-            Updated:{" "}
+            {t('Updated')}:{" "}
             {new Date(
               data.checked_at
-            ).toLocaleString()}
-            {" · "}Read-only
-            {" · "}Refresh 15s
+            ).toLocaleString(locale)}
+            {" · "}{t('Read-only')}
+            {" · "}{t('Refresh 15s')}
           </footer>
         </>
       )}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './PlatformHealth.css'
+import { useLanguage } from './i18n/LanguageContext'
 
 type Status = 'UP' | 'DOWN' | 'DEGRADED' | 'UNKNOWN'
 
@@ -20,6 +21,7 @@ interface PlatformHealthResponse {
 }
 
 export default function PlatformHealth() {
+  const { t, locale } = useLanguage()
   const [data, setData] = useState<PlatformHealthResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -65,23 +67,23 @@ export default function PlatformHealth() {
   return (
     <section className="platform-health">
       <div className="health-heading">
-        <h2>Platform Health</h2>
-        <span>Automatic refresh: 15s</span>
+        <h2>{t('Platform Health')}</h2>
+        <span>{t('Automatic refresh: 15s')}</span>
       </div>
 
       {error && (
         <div className="health-error">
-          Health API unavailable: {error}
+          {t('Health API unavailable')}: {error}
         </div>
       )}
 
       {data && (
         <>
           <div className="health-summary">
-            <strong>Overall: {data.status}</strong>
-            <span>Mode: {data.mode}</span>
+            <strong>{t('Overall')}: {data.status}</strong>
+            <span>{t('Mode')}: {data.mode}</span>
             <span>
-              Checked: {new Date(data.checked_at).toLocaleString()}
+              {t('Checked')}: {new Date(data.checked_at).toLocaleString(locale)}
             </span>
           </div>
 
@@ -90,7 +92,7 @@ export default function PlatformHealth() {
               <article className="health-card" key={item.name}>
                 <div className="health-card-header">
                   <strong>{item.name}</strong>
-                  <span className={`health-status status-${item.status}`}>
+                  <span className={`health-status status-${item.status}`} data-health-status={item.status}>
                     {item.status}
                   </span>
                 </div>

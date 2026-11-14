@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./WorkerHealth.css";
+import { useLanguage } from "./i18n/LanguageContext";
 
 type Partition = {
   partition: number;
@@ -29,6 +30,7 @@ type WorkerHealthData = {
 };
 
 export default function WorkerHealth() {
+  const { t, locale } = useLanguage();
   const [data, setData] = useState<WorkerHealthData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -87,17 +89,17 @@ export default function WorkerHealth() {
     <section className="titan-workers">
       <header className="titan-workers-header">
         <div>
-          <h2>Worker Health</h2>
-          <p>Kafka consumer groups · Read-only</p>
+          <h2>{t('Worker Health')}</h2>
+          <p>{t('Kafka consumer groups · Read-only')}</p>
         </div>
-        <span className="titan-workers-overall">
-          {error ? "UNAVAILABLE" : data?.status ?? "LOADING"}
+        <span className="titan-workers-overall" data-health-status={error ? "UNKNOWN" : data?.status ?? "UNKNOWN"}>
+          {error ? t('UNAVAILABLE') : data?.status ?? t('LOADING')}
         </span>
       </header>
 
       {error && (
         <p className="titan-workers-error">
-          Evidence refresh failed: {error}
+          {t('Evidence refresh failed')}: {error}
         </p>
       )}
 
@@ -111,7 +113,7 @@ export default function WorkerHealth() {
               >
                 <div className="titan-worker-top">
                   <strong>{group.group_id}</strong>
-                  <span>{group.status}</span>
+                  <span className="titan-status-badge" data-health-status={group.status}>{group.status}</span>
                 </div>
 
                 <p className="titan-worker-topic">
@@ -120,14 +122,14 @@ export default function WorkerHealth() {
 
                 <div className="titan-worker-metrics">
                   <div>
-                    <small>Group state</small>
+                    <small>{t('Group state')}</small>
                     <strong>
                       {group.group_state ?? "UNKNOWN"}
                     </strong>
                   </div>
 
                   <div>
-                    <small>Consumer lag</small>
+                    <small>{t('Consumer lag')}</small>
                     <strong>
                       {group.lag ?? "UNKNOWN"}
                     </strong>
@@ -141,10 +143,10 @@ export default function WorkerHealth() {
                 <div className="titan-worker-partitions">
                   {group.partitions.map((partition) => (
                     <p key={partition.partition}>
-                      Partition {partition.partition}
-                      {" · "}Committed {partition.committed ?? "N/A"}
-                      {" · "}High {partition.high ?? "N/A"}
-                      {" · "}Lag {partition.lag ?? "UNKNOWN"}
+                      {t('Partition')} {partition.partition}
+                      {" · "}{t('Committed')} {partition.committed ?? "N/A"}
+                      {" · "}{t('High')} {partition.high ?? "N/A"}
+                      {" · "}{t('Lag')} {partition.lag ?? "UNKNOWN"}
                     </p>
                   ))}
                 </div>
@@ -153,8 +155,8 @@ export default function WorkerHealth() {
           </div>
 
           <footer className="titan-workers-footer">
-            Updated: {new Date(data.checked_at).toLocaleString()}
-            {" · "}Auto-refresh: 15s
+            {t('Updated')}: {new Date(data.checked_at).toLocaleString(locale)}
+            {" · "}{t('Auto-refresh: 15s')}
           </footer>
         </>
       )}

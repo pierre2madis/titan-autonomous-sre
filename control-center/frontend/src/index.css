@@ -2,3 +2,43 @@ html {
   min-width: 320px;
   min-height: 100%;
 }
+
+/* TITAN-UI-02C-01 STATUS COLORS */
+[data-health-status] {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.4rem;
+  font-weight: 700;
+  background: #475569;
+  color: #ffffff;
+}
+
+[data-health-status="UP"],
+[data-health-status="HEALTHY"],
+[data-health-status="OK"],
+[data-health-status="READY"] {
+  background: #166534;
+  color: #ffffff;
+}
+
+[data-health-status="KO"],
+[data-health-status="DOWN"],
+[data-health-status="CRITICAL"],
+[data-health-status="ERROR"] {
+  background: #b91c1c;
+  color: #ffffff;
+}
+
+[data-health-status="WARNING"],
+[data-health-status="WARN"],
+[data-health-status="DEGRADED"] {
+  background: #a16207;
+  color: #ffffff;
+}
+
+[data-health-status="UNKNOWN"],
+[data-health-status="UNAVAILABLE"],
+[data-health-status="LOADING"] {
+  background: #475569;
+  color: #ffffff;
+}
