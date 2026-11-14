@@ -32,3 +32,38 @@ export interface Timeline {
   count: number
   mode: string
 }
+
+export interface RCAEvent {
+  event_id: string
+  source: string
+  event_type: string
+  host: string | null
+  correlation_key: string | null
+  observed_at: string | null
+  received_at: string | null
+}
+export interface IncidentRCAResponse {
+  incident_id: string
+  mode: 'READ_ONLY'
+  incident: Incident
+  observed_facts: {
+    declared_root_event_id: string | null
+    root_event_found: boolean
+    related_event_count_returned: number
+    transition_count_returned: number
+  }
+  root_event: RCAEvent | null
+  related_events: RCAEvent[]
+  transitions: Transition[]
+  assessment: {
+    classification: string
+    confidence: 'UNDETERMINED'
+    causality_verified: boolean
+    limitations: string[]
+  }
+  limits: {
+    per_collection: number
+    events_truncated: boolean
+    transitions_truncated: boolean
+  }
+}

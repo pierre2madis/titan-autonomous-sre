@@ -1,4 +1,4 @@
-import type { Incident, IncidentList, Timeline } from './types'
+import type { Incident, IncidentList, Timeline, IncidentRCAResponse } from './types'
 
 async function getJSON<T>(path: string): Promise<T> {
   const response = await fetch(path, {
@@ -14,6 +14,8 @@ async function getJSON<T>(path: string): Promise<T> {
 }
 
 export const titanAPI = {
+  rca: (id: string) =>
+    getJSON<IncidentRCAResponse>(`/api/v1/incidents/${encodeURIComponent(id)}/rca`),
   incidents: () =>
     getJSON<IncidentList>('/api/v1/incidents?limit=50'),
 

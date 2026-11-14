@@ -5,6 +5,7 @@ import PlatformHealth from './PlatformHealth'
 import { useEffect, useState } from 'react'
 import { titanAPI } from './api/client'
 import type { Incident, Timeline } from './api/types'
+import IncidentRCA from './IncidentRCA'
 import './App.css'
 
 function formatDate(value: string | null): string {
@@ -182,6 +183,7 @@ function App() {
           </div>
         </section>
 
+        {selected && <IncidentRCA incidentId={selected.incident_id} />}
         <PlatformHealth />
       <CorePipeline />
       <WorkerHealth />

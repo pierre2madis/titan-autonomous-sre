@@ -1,3 +1,4 @@
+from api.incident_rca import router as incident_rca_router
 from api.pipeline_correlation import router as correlation_router
 from api.worker_health import router as worker_router
 from api.core_pipeline import router as pipeline_router
@@ -31,6 +32,7 @@ app.include_router(platform_router)
 app.include_router(pipeline_router)
 app.include_router(worker_router)
 app.include_router(correlation_router)
+app.include_router(incident_rca_router)
 
 @app.get("/api/v1/health")
 def health():
