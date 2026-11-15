@@ -36,6 +36,32 @@ function EvidenceRecord({
   )
 }
 
+
+function chronologicalTransitions<T extends {
+  received_at: string | null
+  event_id: string
+  transition_id: string
+}>(items: T[]): T[] {
+  const timestamp = (value: string | null): number => {
+    if (!value) return Number.POSITIVE_INFINITY
+    const parsed = Date.parse(value)
+    return Number.isNaN(parsed) ? Number.POSITIVE_INFINITY : parsed
+  }
+
+  return [...items].sort((a, b) => {
+    const byTime = timestamp(a.received_at) - timestamp(b.received_at)
+
+    if (!Number.isNaN(byTime) && byTime !== 0) {
+      return byTime
+    }
+
+    return (
+      a.transition_id.localeCompare(b.transition_id) ||
+      a.event_id.localeCompare(b.event_id)
+    )
+  })
+}
+
 export default function EvidenceProvenance({ data }: Props) {
   const {
     incident,
@@ -101,7 +127,7 @@ export default function EvidenceProvenance({ data }: Props) {
 
       <h3>Kafka Transition Provenance</h3>
 
-      {transitions.map(transition => (
+      {chronologicalTransitions(transitions).map(transition => (
         <div
           className="timeline-item"
           key={`${transition.event_id}-${transition.transition_id}`}
