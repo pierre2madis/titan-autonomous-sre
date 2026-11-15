@@ -3,6 +3,35 @@ import { titanAPI } from './api/client'
 import type { IncidentRCAResponse } from './api/types'
 import { useLanguage } from './i18n/LanguageContext'
 
+
+function chronologicalTransitions<T extends {
+  received_at: string | null
+  event_id: string
+  transition_id: string
+}>(items: T[]): T[] {
+  const timestamp = (value: string | null): number => {
+    if (!value) return Number.POSITIVE_INFINITY
+    const parsed = Date.parse(value)
+    return Number.isFinite(parsed) ? parsed : Number.POSITIVE_INFINITY
+  }
+
+  return [...items].sort((a, b) => {
+    const timeA = timestamp(a.received_at)
+    const timeB = timestamp(b.received_at)
+
+    if (timeA !== timeB) {
+      if (timeA === Number.POSITIVE_INFINITY) return 1
+      if (timeB === Number.POSITIVE_INFINITY) return -1
+      return timeA - timeB
+    }
+
+    return (
+      a.transition_id.localeCompare(b.transition_id) ||
+      a.event_id.localeCompare(b.event_id)
+    )
+  })
+}
+
 export default function IncidentRCA({ incidentId }: { incidentId: string }) {
   const { t, displayValue, locale } = useLanguage()
   const [data, setData] = useState<IncidentRCAResponse | null>(null)
@@ -43,7 +72,7 @@ export default function IncidentRCA({ incidentId }: { incidentId: string }) {
           {data.limits.events_truncated && <p>{t('Event results truncated.')}</p>}
           <h3>{t('Transitions')}</h3>
           {data.transitions.length === 0 && <p className="empty">{t('No transitions found.')}</p>}
-          {data.transitions.map(tr => <div className="timeline-item" key={tr.event_id}>
+          {chronologicalTransitions(data.transitions).map(tr => <div className="timeline-item" key={tr.event_id}>
             <strong>{tr.transition_id}</strong><span>{tr.received_at ? new Date(tr.received_at).toLocaleString(locale) : '—'}</span>
           </div>)}
           {data.limits.transitions_truncated && <p>{t('Transition results truncated.')}</p>}

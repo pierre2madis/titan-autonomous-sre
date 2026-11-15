@@ -51,6 +51,35 @@ type RCA = {
   }
 }
 
+
+function chronologicalTransitions<T extends {
+  received_at: string | null
+  event_id: string
+  transition_id: string
+}>(items: T[]): T[] {
+  const timestamp = (value: string | null): number => {
+    if (!value) return Number.POSITIVE_INFINITY
+    const parsed = Date.parse(value)
+    return Number.isFinite(parsed) ? parsed : Number.POSITIVE_INFINITY
+  }
+
+  return [...items].sort((a, b) => {
+    const timeA = timestamp(a.received_at)
+    const timeB = timestamp(b.received_at)
+
+    if (timeA !== timeB) {
+      if (timeA === Number.POSITIVE_INFINITY) return 1
+      if (timeB === Number.POSITIVE_INFINITY) return -1
+      return timeA - timeB
+    }
+
+    return (
+      a.transition_id.localeCompare(b.transition_id) ||
+      a.event_id.localeCompare(b.event_id)
+    )
+  })
+}
+
 export default function OperationalIncidents({
   selectedIncidentId,
   onSelectIncident,
@@ -256,7 +285,7 @@ export default function OperationalIncidents({
               <p>No persisted transitions returned.</p>
             ) : (
               <ul>
-                {rca.transitions.map((transition, index) => (
+                {chronologicalTransitions(rca.transitions).map((transition, index) => (
                   <li key={`${transition.event_id}-${index}`}>
                     {transition.received_at || 'Unknown time'} —{' '}
                     {transition.transition_id} ({transition.topic})
