@@ -1,10 +1,10 @@
 .titan-pipeline {
   margin-top: 24px;
   padding: 24px;
-  background: #141c2b;
-  border: 1px solid #29354a;
+  background: var(--titan-panel);
+  border: 1px solid var(--titan-border);
   border-radius: 14px;
-  color: #e8edf7;
+  color: var(--titan-text);
 }
 
 .titan-pipeline-header {
@@ -20,7 +20,7 @@
 }
 
 .titan-pipeline-header p {
-  color: #94a3b8;
+  color: var(--titan-muted);
   font-size: 13px;
 }
 
@@ -42,14 +42,14 @@
 
 .titan-pipeline-grid > div {
   padding: 18px;
-  background: #1c293d;
-  border: 1px solid #334155;
+  background: var(--titan-bg);
+  border: 1px solid var(--titan-border);
   border-radius: 10px;
 }
 
 .titan-pipeline-grid span {
   display: block;
-  color: #94a3b8;
+  color: var(--titan-muted);
   font-size: 12px;
 }
 
@@ -65,7 +65,7 @@
 }
 
 .titan-pipeline-details p {
-  color: #cbd5e1;
+  color: var(--titan-text);
 }
 
 .titan-pipeline-details dl {
@@ -75,7 +75,7 @@
 }
 
 .titan-pipeline-details dt {
-  color: #94a3b8;
+  color: var(--titan-muted);
 }
 
 .titan-pipeline-details dd {
@@ -85,7 +85,7 @@
 
 .titan-pipeline-footer {
   margin-top: 20px;
-  color: #94a3b8;
+  color: var(--titan-muted);
   font-size: 12px;
 }
 

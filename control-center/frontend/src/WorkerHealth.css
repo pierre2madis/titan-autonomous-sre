@@ -1,10 +1,10 @@
 .titan-workers {
   margin-top: 24px;
   padding: 24px;
-  background: #141c2b;
+  background: var(--titan-panel);
   border: 1px solid #29354a;
   border-radius: 14px;
-  color: #e8edf7;
+  color: var(--titan-text);
 }
 
 .titan-workers-header,
@@ -24,7 +24,7 @@
 .titan-worker-topic,
 .titan-worker-reason,
 .titan-workers-footer {
-  color: #94a3b8;
+  color: var(--titan-muted);
   font-size: 13px;
 }
 
@@ -32,7 +32,6 @@
 .titan-worker-top span {
   padding: 6px 12px;
   border-radius: 20px;
-  background: #334155;
   font-size: 12px;
   font-weight: 700;
 }
@@ -47,7 +46,7 @@
 .titan-worker-card {
   padding: 18px;
   border: 1px solid #334155;
-  background: #1c293d;
+  background: var(--titan-panel);
   border-radius: 10px;
   min-width: 0;
 }
@@ -65,7 +64,7 @@
 
 .titan-worker-metrics small {
   display: block;
-  color: #94a3b8;
+  color: var(--titan-muted);
   margin-bottom: 6px;
 }
 
@@ -78,7 +77,7 @@
   border-top: 1px solid #334155;
   padding-top: 12px;
   font-size: 12px;
-  color: #cbd5e1;
+  color: var(--titan-muted);
 }
 
 .titan-worker-partitions p {

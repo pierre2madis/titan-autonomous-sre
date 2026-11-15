@@ -12,6 +12,8 @@ from psycopg import OperationalError
 from api.database import database_connection
 
 
+from api.incident_lifecycle import router as incident_lifecycle_router
+
 app = FastAPI(
     title="TITAN Control Center API",
     version="0.1.0",
@@ -33,6 +35,7 @@ app.include_router(pipeline_router)
 app.include_router(worker_router)
 app.include_router(correlation_router)
 app.include_router(incident_rca_router)
+app.include_router(incident_lifecycle_router)
 
 @app.get("/api/v1/health")
 def health():

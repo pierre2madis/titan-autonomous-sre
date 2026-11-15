@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { titanAPI } from './api/client'
 import type { Incident, Timeline } from './api/types'
 import IncidentRCA from './IncidentRCA'
+import IncidentLifecycle from './IncidentLifecycle'
 import './App.css'
 import { useLanguage, LanguageSwitcher } from './i18n/LanguageContext'
 import ThemeControls from './ThemeControls'
@@ -201,6 +202,7 @@ function App() {
 
         {view === 'incidents' && selected && <IncidentRCA incidentId={selected.incident_id} />}
         </>}
+        {view === 'incidents' && <IncidentLifecycle />}
         {view === 'evidence' && <section className="panel titan-view-panel">
           <div className="panel-header"><h2>{t('Evidence Explorer')}</h2><span>{t('READ-ONLY MODE')}</span></div>
           <div className="details">

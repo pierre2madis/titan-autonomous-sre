@@ -328,3 +328,102 @@ body, .app { background: var(--titan-bg); color: var(--titan-text); }
   .sidebar nav { display: flex; flex-direction: row; flex-wrap: wrap; }
   .sidebar nav button { width: auto; }
 }
+
+/* TITAN-PORTFOLIO-08I-10I: theme contrast recovery */
+
+:root[data-titan-theme="dark"],
+:root[data-titan-theme="slate"],
+:root[data-titan-theme="light"] {
+  color-scheme: normal;
+}
+
+.app .topbar h1,
+.app .panel h2,
+.app .panel h3,
+.app .metric-card strong,
+.app .metric-card h2,
+.app .sidebar .brand,
+.app .sidebar .brand strong,
+.app .sidebar nav button {
+  color: var(--titan-text);
+}
+
+.app .sidebar nav button.nav-active {
+  color: var(--titan-accent);
+}
+
+.app .topbar p,
+.app .metric-card span,
+.app .metric-card small {
+  color: var(--titan-muted);
+}
+
+
+/* TITAN-PORTFOLIO-08I-10K: Light theme recovery */
+
+:root[data-titan-theme="light"] {
+  --titan-bg: #f8fafc;
+  --titan-sidebar: #ffffff;
+  --titan-panel: #ffffff;
+  --titan-border: #cbd5e1;
+  --titan-text: #0f172a;
+  --titan-muted: #475569;
+  --titan-selected: #dbeafe;
+  --titan-accent: #1d4ed8;
+}
+
+:root[data-titan-theme="light"] body,
+:root[data-titan-theme="light"] .app {
+  background: var(--titan-bg);
+  color: var(--titan-text);
+}
+
+:root[data-titan-theme="light"] .sidebar {
+  background: var(--titan-sidebar);
+}
+
+:root[data-titan-theme="light"] .metric-card,
+:root[data-titan-theme="light"] .panel {
+  background: var(--titan-panel);
+  color: var(--titan-text);
+}
+
+:root[data-titan-theme="light"] .topbar h1,
+:root[data-titan-theme="light"] .sidebar .brand,
+:root[data-titan-theme="light"] .sidebar nav button,
+:root[data-titan-theme="light"] .panel h2,
+:root[data-titan-theme="light"] .panel h3 {
+  color: var(--titan-text);
+}
+
+:root[data-titan-theme="light"] .sidebar nav button.nav-active {
+  color: var(--titan-accent);
+}
+
+
+/* TITAN-PORTFOLIO-08I-10L: appearance controls */
+
+.titan-appearance-options input[type="color"] {
+  width: 44px;
+  height: 30px;
+  padding: 2px;
+  cursor: pointer;
+  border: 1px solid var(--titan-border);
+  border-radius: 5px;
+  background: var(--titan-panel);
+}
+
+.titan-appearance-options button {
+  cursor: pointer;
+}
+
+/* Platform Health: light theme contrast recovery */
+
+:root[data-titan-theme="light"] .titan-health,
+:root[data-titan-theme="light"] .titan-health-card,
+:root[data-titan-theme="light"] .titan-health-overall,
+:root[data-titan-theme="light"] .titan-pipeline {
+  background: var(--titan-panel);
+  color: var(--titan-text);
+  border-color: var(--titan-border);
+}

@@ -16,7 +16,7 @@
 }
 
 .health-heading > span {
-  color: #94a3b8;
+  color: var(--titan-muted);
   font-size: 12px;
 }
 
@@ -26,13 +26,13 @@
   gap: 20px;
   padding: 18px;
   margin-bottom: 18px;
-  background: #121f33;
-  border: 1px solid #26364c;
+  background: var(--titan-panel);
+  border: 1px solid var(--titan-border);
   border-radius: 12px;
 }
 
 .health-summary span {
-  color: #94a3b8;
+  color: var(--titan-muted);
 }
 
 .health-grid {
@@ -43,17 +43,17 @@
 
 .health-card {
   padding: 22px;
-  background: #121f33;
-  border: 1px solid #26364c;
+  background: var(--titan-panel);
+  border: 1px solid var(--titan-border);
   border-radius: 12px;
 }
 
 .health-card p {
-  color: #cbd5e1;
+  color: var(--titan-text);
 }
 
 .health-card small {
-  color: #94a3b8;
+  color: var(--titan-muted);
 }
 
 .health-status {
@@ -80,7 +80,7 @@
 
 .status-UNKNOWN {
   background: #334155;
-  color: #cbd5e1;
+  color: var(--titan-text);
 }
 
 .health-error {

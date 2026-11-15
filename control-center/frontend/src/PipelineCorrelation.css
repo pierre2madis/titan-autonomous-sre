@@ -3,8 +3,8 @@
   padding: 24px;
   border: 1px solid #29354a;
   border-radius: 14px;
-  background: #141c2b;
-  color: #e8edf7;
+  background: var(--titan-panel);
+  color: var(--titan-text);
 }
 
 .titan-correlation-header {
@@ -21,7 +21,7 @@
 
 .titan-correlation-header p,
 .titan-correlation-footer {
-  color: #94a3b8;
+  color: var(--titan-muted);
   font-size: 13px;
 }
 
@@ -44,12 +44,12 @@
   padding: 16px;
   border: 1px solid #334155;
   border-radius: 10px;
-  background: #1c293d;
+  background: var(--titan-panel);
 }
 
 .titan-correlation-metrics small {
   display: block;
-  color: #94a3b8;
+  color: var(--titan-muted);
   margin-bottom: 8px;
 }
 
@@ -70,7 +70,7 @@
 
 .titan-correlation-details ul {
   padding-left: 20px;
-  color: #cbd5e1;
+  color: var(--titan-muted);
   font-size: 13px;
   overflow-wrap: anywhere;
 }
