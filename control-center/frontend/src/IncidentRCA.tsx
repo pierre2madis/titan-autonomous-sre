@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { titanAPI } from './api/client'
+import EvidenceProvenance from './EvidenceProvenance'
 import type { IncidentRCAResponse } from './api/types'
 import { useLanguage } from './i18n/LanguageContext'
 
@@ -76,6 +77,7 @@ export default function IncidentRCA({ incidentId }: { incidentId: string }) {
             <strong>{tr.transition_id}</strong><span>{tr.received_at ? new Date(tr.received_at).toLocaleString(locale) : '—'}</span>
           </div>)}
           {data.limits.transitions_truncated && <p>{t('Transition results truncated.')}</p>}
+          <EvidenceProvenance data={data} />
           <h3>{t('Evidence limitations')}</h3>
           <ul>{data.assessment.limitations.map(s => <li key={s}>{t(s)}</li>)}</ul>
         </>}
