@@ -38,7 +38,8 @@ function App() {
   }, [incidents])
   const [timeline, setTimeline] = useState<Timeline | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [incidentsError, setIncidentsError] = useState<string | null>(null)
+  const [timelineError, setTimelineError] = useState<string | null>(null)
 
   useEffect(() => {
     titanAPI.incidents()
@@ -54,7 +55,7 @@ function App() {
             return data.items[0] ?? null
           })
       })
-      .catch(err => setError(String(err)))
+      .catch(err => setIncidentsError(String(err)))
       .finally(() => setLoading(false))
   }, [])
 
@@ -64,6 +65,7 @@ function App() {
     let active = true
 
     setTimeline(null)
+    setTimelineError(null)
 
     if (!selectedIncidentId) {
       return () => { active = false }
@@ -76,7 +78,7 @@ function App() {
         }
       })
       .catch(err => {
-        if (active) setError(String(err))
+        if (active) setTimelineError(String(err))
       })
 
     return () => { active = false }
@@ -145,7 +147,7 @@ function App() {
 
         {(view === 'overview' || view === 'incidents') && <>
         {loading && <p>{t('Loading incidents...')}</p>}
-        {error && <div className="error">{error}</div>}
+
 
         <section className="workspace">
           <div className="panel">
@@ -153,6 +155,12 @@ function App() {
               <h2>{t('Incidents')}</h2>
               <span>{incidents.length} {t('loaded')}</span>
             </div>
+
+            {incidentsError && (
+              <div className="error" role="alert">
+                {incidentsError}
+              </div>
+            )}
 
             {incidents.map(incident => (
               <button
@@ -164,7 +172,6 @@ function App() {
                 }
                 onClick={() => {
                   setSelected(incident)
-                  setError(null)
                 }}
               >
                 <strong>{incident.incident_id}</strong>
@@ -209,6 +216,12 @@ function App() {
                 </dl>
 
                 <h3>{t('Transition Timeline')}</h3>
+
+                {timelineError && (
+                  <div className="error" role="alert">
+                    {timelineError}
+                  </div>
+                )}
 
                 {(timeline?.incident_id === selected.incident_id
                   ? timeline.items
