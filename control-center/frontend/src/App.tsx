@@ -58,15 +58,29 @@ function App() {
       .finally(() => setLoading(false))
   }, [])
 
+  const selectedIncidentId = selected?.incident_id ?? null
+
   useEffect(() => {
-    if (!selected) return
+    let active = true
 
     setTimeline(null)
 
-    titanAPI.timeline(selected.incident_id)
-      .then(setTimeline)
-      .catch(err => setError(String(err)))
-  }, [selected])
+    if (!selectedIncidentId) {
+      return () => { active = false }
+    }
+
+    titanAPI.timeline(selectedIncidentId)
+      .then(result => {
+        if (active && result.incident_id === selectedIncidentId) {
+          setTimeline(result)
+        }
+      })
+      .catch(err => {
+        if (active) setError(String(err))
+      })
+
+    return () => { active = false }
+  }, [selectedIncidentId])
 
   return (
     <div className="app">
@@ -196,7 +210,9 @@ function App() {
 
                 <h3>{t('Transition Timeline')}</h3>
 
-                {timeline?.items.map(item => (
+                {(timeline?.incident_id === selected.incident_id
+                  ? timeline.items
+                  : []).map(item => (
                   <div className="timeline-item" key={item.event_id}>
                     <strong>{item.transition_id}</strong>
                     <span>{formatDate(item.received_at, locale)}</span>
