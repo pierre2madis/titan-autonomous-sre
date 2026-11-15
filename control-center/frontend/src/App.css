@@ -427,3 +427,30 @@ body, .app { background: var(--titan-bg); color: var(--titan-text); }
   color: var(--titan-text);
   border-color: var(--titan-border);
 }
+
+/* TITAN-PORTFOLIO-08I-13B: operational incident refresh controls */
+.titan-operational-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.titan-operational-controls button,
+.titan-operational-controls select {
+  padding: 7px 12px;
+  border: 1px solid var(--titan-border);
+  border-radius: 6px;
+  background: var(--titan-panel);
+  color: var(--titan-text);
+}
+.titan-operational-controls button {
+  cursor: pointer;
+}
+.titan-operational-controls button:hover {
+  border-color: var(--titan-accent);
+}
+.titan-operational-controls span {
+  color: var(--titan-muted);
+  font-size: 0.85rem;
+}

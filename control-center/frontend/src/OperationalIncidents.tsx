@@ -35,6 +35,8 @@ type RCA = {
     event_id: string
     transition_id: string
     topic: string
+    partition_id: number | null
+    kafka_offset: number | null
     received_at: string | null
   }>
   assessment: {
@@ -55,6 +57,9 @@ export default function OperationalIncidents() {
   const [rca, setRca] = useState<RCA | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
+  const [refreshInterval, setRefreshInterval] = useState(0)
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -87,7 +92,7 @@ export default function OperationalIncidents() {
 
     void load()
     return () => controller.abort()
-  }, [])
+  }, [refreshKey])
 
   useEffect(() => {
     if (!selected) return
@@ -116,6 +121,7 @@ export default function OperationalIncidents() {
         }
 
         setRca(result)
+        setLastUpdated(new Date().toISOString())
       } catch (err) {
         if (!controller.signal.aborted) {
           setError(err instanceof Error ? err.message : String(err))
@@ -125,7 +131,17 @@ export default function OperationalIncidents() {
 
     void loadRca()
     return () => controller.abort()
-  }, [selected])
+  }, [selected, refreshKey])
+
+  useEffect(() => {
+    if (refreshInterval === 0) return
+
+    const timer = window.setInterval(() => {
+      setRefreshKey(value => value + 1)
+    }, refreshInterval * 1000)
+
+    return () => window.clearInterval(timer)
+  }, [refreshInterval])
 
   return (
     <section className="panel" style={{ marginTop: 20 }}>
@@ -135,6 +151,35 @@ export default function OperationalIncidents() {
       </div>
 
       <div className="details">
+        <div className="titan-operational-controls">
+          <button
+            type="button"
+            onClick={() => setRefreshKey(value => value + 1)}
+          >
+            Refresh
+          </button>
+
+          <label htmlFor="titan-refresh-interval">
+            Auto-refresh
+          </label>
+
+          <select
+            id="titan-refresh-interval"
+            value={refreshInterval}
+            onChange={event => setRefreshInterval(Number(event.target.value))}
+          >
+            <option value={0}>Off</option>
+            <option value={30}>30 seconds</option>
+            <option value={60}>60 seconds</option>
+          </select>
+
+          <span>
+            Last updated: {lastUpdated
+              ? new Date(lastUpdated).toLocaleTimeString()
+              : 'Not yet'}
+          </span>
+        </div>
+
         {loading && <p>Loading operational incidents...</p>}
         {error && <p className="error" role="alert">{error}</p>}
 
@@ -207,6 +252,10 @@ export default function OperationalIncidents() {
                   <li key={`${transition.event_id}-${index}`}>
                     {transition.received_at || 'Unknown time'} —{' '}
                     {transition.transition_id} ({transition.topic})
+                    {' · Partition '}
+                    {transition.partition_id ?? 'unknown'}
+                    {' · Offset '}
+                    {transition.kafka_offset ?? 'unknown'}
                   </li>
                 ))}
               </ul>
