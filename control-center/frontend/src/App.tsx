@@ -44,9 +44,15 @@ function App() {
     titanAPI.incidents()
       .then(data => {
         setIncidents(data.items)
-        if (data.items.length > 0) {
-          setSelected(data.items[0])
-        }
+        setSelected(current => {
+            if (current) {
+              return data.items.find(
+                incident => incident.incident_id === current.incident_id
+              ) ?? current
+            }
+
+            return data.items[0] ?? null
+          })
       })
       .catch(err => setError(String(err)))
       .finally(() => setLoading(false))
@@ -167,6 +173,14 @@ function App() {
             {selected ? (
               <div className="details">
                 <h3>{selected.incident_id}</h3>
+                {!incidents.some(
+                  incident => incident.incident_id === selected.incident_id
+                ) && (
+                  <p className="empty" role="status">
+                    Selected incident is not present in the currently
+                    loaded incident list. Investigation context is retained.
+                  </p>
+                )}
                 <span className="state">{selected.state}</span>
 
                 <dl>
