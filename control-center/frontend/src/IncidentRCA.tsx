@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { titanAPI } from './api/client'
 import EvidenceProvenance from './EvidenceProvenance'
+import RemediationAdvisor from './RemediationAdvisor'
 import type { IncidentRCAResponse } from './api/types'
 import { useLanguage } from './i18n/LanguageContext'
 
@@ -26,6 +27,7 @@ export default function IncidentRCA({ incidentId }: { incidentId: string }) {
         {error && <p className="error" role="alert">{error}</p>}
         {!data && !error && <p className="empty">{t('Loading RCA evidence...')}</p>}
         {data && <EvidenceProvenance data={data} />}
+        {data && <RemediationAdvisor data={data} />}
       </div>
     </section>
   )
