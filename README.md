@@ -246,3 +246,16 @@ See [LICENSE](LICENSE).
 Component provenance and third-party redistribution obligations
 remain subject to review. The presence of an Apache 2.0 license
 does not independently establish rights over third-party materials.
+
+
+## Control Center — Incident Investigation
+
+The TITAN Control Center provides read-only incident
+investigation through a React/TypeScript interface and
+FastAPI endpoints.
+
+Validated capabilities include incident discovery,
+timeline inspection, explainable RCA, and graceful
+degradation during a simulated timeline failure.
+
+[View the technical demonstration](docs/portfolio/control-center-incident-investigation.md)
