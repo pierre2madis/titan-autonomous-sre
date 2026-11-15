@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Incident = {
   incident_id: string
@@ -51,9 +51,17 @@ type RCA = {
   }
 }
 
-export default function OperationalIncidents() {
+export default function OperationalIncidents({
+  selectedIncidentId,
+  onSelectIncident,
+}: {
+  selectedIncidentId: string
+  onSelectIncident: (incidentId: string) => void
+}) {
   const [incidents, setIncidents] = useState<Incident[]>([])
-  const [selected, setSelected] = useState('')
+  const selected = selectedIncidentId
+  const selectionRef = useRef({ selectedIncidentId, onSelectIncident })
+  selectionRef.current = { selectedIncidentId, onSelectIncident }
   const [rca, setRca] = useState<RCA | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
@@ -78,8 +86,8 @@ export default function OperationalIncidents() {
         }
 
         setIncidents(result.items)
-        if (result.items.length > 0) {
-          setSelected(result.items[0].incident_id)
+        if (!selectionRef.current.selectedIncidentId && result.items.length > 0) {
+          selectionRef.current.onSelectIncident(result.items[0].incident_id)
         }
       } catch (err) {
         if (!controller.signal.aborted) {
@@ -195,7 +203,7 @@ export default function OperationalIncidents() {
             <select
               id="titan-operational-incident"
               value={selected}
-              onChange={event => setSelected(event.target.value)}
+              onChange={event => onSelectIncident(event.target.value)}
               style={{ marginLeft: 12, maxWidth: '100%' }}
             >
               {incidents.map(incident => (

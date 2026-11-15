@@ -2,7 +2,7 @@ import PipelineCorrelation from "./PipelineCorrelation";
 import WorkerHealth from "./WorkerHealth";
 import CorePipeline from "./CorePipeline";
 import PlatformHealth from './PlatformHealth'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { titanAPI } from './api/client'
 import type { Incident, Timeline } from './api/types'
 import IncidentRCA from './IncidentRCA'
@@ -30,6 +30,12 @@ function App() {
   ]
   const [incidents, setIncidents] = useState<Incident[]>([])
   const [selected, setSelected] = useState<Incident | null>(null)
+  const handleOperationalSelection = useCallback((id: string) => {
+    setSelected(current => {
+      if (current?.incident_id === id) return current
+      return incidents.find(item => item.incident_id === id) ?? null
+    })
+  }, [incidents])
   const [timeline, setTimeline] = useState<Timeline | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -203,7 +209,7 @@ function App() {
 
         {view === 'incidents' && selected && <IncidentRCA incidentId={selected.incident_id} />}
         </>}
-        {view === 'incidents' && <OperationalIncidents />}
+        {view === 'incidents' && <OperationalIncidents selectedIncidentId={selected?.incident_id ?? ""} onSelectIncident={handleOperationalSelection} />}
         {view === 'incidents' && <IncidentLifecycle />}
         {view === 'evidence' && <section className="panel titan-view-panel">
           <div className="panel-header"><h2>{t('Evidence Explorer')}</h2><span>{t('READ-ONLY MODE')}</span></div>
