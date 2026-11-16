@@ -1,4 +1,5 @@
 import type { IncidentRCAResponse, RCAEvent } from './api/types'
+import { summarizeEvidenceProvenance } from './evidenceProvenance'
 
 type Props = {
   data: IncidentRCAResponse
@@ -63,6 +64,7 @@ function chronologicalTransitions<T extends {
 }
 
 export default function EvidenceProvenance({ data }: Props) {
+  const provenance = summarizeEvidenceProvenance(data)
   const {
     incident,
     observed_facts,
@@ -84,6 +86,53 @@ export default function EvidenceProvenance({ data }: Props) {
         Incident: <strong>{incident.incident_id}</strong>
         {' · '}Correlation key: {display(incident.correlation_key)}
       </p>
+
+      <h3>Structured Source Provenance</h3>
+
+      <p>
+        {provenance.totalEvents} evidence records across{' '}
+        {provenance.distinctSources} reported sources.
+      </p>
+
+      {provenance.sources.map(source => (
+        <div className="timeline-item" key={source.source}>
+          <strong>{source.source}</strong>
+          <span>{source.eventCount} event records</span>
+          <small>
+            Event types: {source.eventTypes.join(', ')}
+          </small>
+          <small>
+            Hosts: {source.hosts.join(', ') || 'Not available'}
+          </small>
+        </div>
+      ))}
+
+      <h3>Provenance Metadata Quality</h3>
+
+      <dl>
+        <dt>Missing host</dt>
+        <dd>{provenance.missingHostCount}</dd>
+
+        <dt>Missing observation timestamp</dt>
+        <dd>{provenance.missingObservedAtCount}</dd>
+
+        <dt>Invalid observation timestamp</dt>
+        <dd>{provenance.invalidObservedAtCount}</dd>
+
+        <dt>Missing reception timestamp</dt>
+        <dd>{provenance.missingReceivedAtCount}</dd>
+
+        <dt>Independent corroboration</dt>
+        <dd>Not established</dd>
+      </dl>
+
+      <h3>Provenance Limitations</h3>
+
+      <ul>
+        {provenance.limitations.map(item => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
 
       <h3>Declared Root Event</h3>
 
