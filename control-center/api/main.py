@@ -1,3 +1,4 @@
+from api.historical_evidence import router as historical_evidence_router
 from api.incident_rca import router as incident_rca_router
 from api.pipeline_correlation import router as correlation_router
 from api.worker_health import router as worker_router
@@ -36,6 +37,7 @@ app.include_router(worker_router)
 app.include_router(correlation_router)
 app.include_router(incident_rca_router)
 app.include_router(incident_lifecycle_router)
+app.include_router(historical_evidence_router)
 
 @app.get("/api/v1/health")
 def health():
