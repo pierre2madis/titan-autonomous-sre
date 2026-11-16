@@ -25,6 +25,11 @@ export default function RemediationAdvisor({
         <p>{recommendation.rationale}</p>
 
         <p>
+          <strong>Evidence status:</strong>{' '}
+          {recommendation.evidenceStatus}
+        </p>
+
+        <p>
           <strong>Recommendation:</strong>{' '}
           {recommendation.type}
         </p>
