@@ -1,3 +1,4 @@
+import IntegrationEvidence from "./IntegrationEvidence";
 import HistoricalEvidence from './HistoricalEvidence'
 import PipelineCorrelation from "./PipelineCorrelation";
 import WorkerHealth from "./WorkerHealth";
@@ -122,7 +123,12 @@ function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><ThemeControls /><LanguageSwitcher /><span className="environment">LAB · V0.2</span></div>
         </header>
 
-        {view === 'evidence' && <HistoricalEvidence />}
+        {view === 'evidence' && (
+          <>
+            <HistoricalEvidence />
+            <IntegrationEvidence />
+          </>
+        )}
 
         {view === 'overview' && <section className="metrics">
           <div className="metric-card">
