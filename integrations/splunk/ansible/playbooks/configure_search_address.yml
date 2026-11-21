@@ -1,0 +1,32 @@
+---
+- name: Configure indexer distributed search registration
+  hosts: splunk_indexers
+  become: true
+  gather_facts: false
+  serial: 1
+
+  tasks:
+    - name: Validate search registration address
+      ansible.builtin.assert:
+        that:
+          - splunk_register_search_address is defined
+          - splunk_register_search_address | length > 0
+        fail_msg: "Missing splunk_register_search_address"
+
+    - name: Maintain indexer search registration address
+      community.general.ini_file:
+        path: /opt/splunk/etc/system/local/server.conf
+        section: clustering
+        option: register_search_address
+        value: "{{ splunk_register_search_address }}"
+        backup: true
+        no_extra_spaces: false
+      register: search_address_config
+      no_log: true
+
+    - name: Report restart requirement
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }}:
+          configuration_changed={{ search_address_config.changed }};
+          restart_required={{ search_address_config.changed }}

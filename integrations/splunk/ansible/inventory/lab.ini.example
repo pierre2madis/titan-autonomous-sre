@@ -1,0 +1,4 @@
+[splunk_indexers]
+idx01 ansible_host=INDEXER_01_MANAGEMENT_ADDRESS
+idx02 ansible_host=INDEXER_02_MANAGEMENT_ADDRESS
+idx03 ansible_host=INDEXER_03_MANAGEMENT_ADDRESS
