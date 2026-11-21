@@ -1,0 +1,12 @@
+{
+  "source": "SPLUNK",
+  "target": "us02",
+  "domain": "INDEXER_CLUSTER",
+  "event_id": "TITAN-SPLUNK-UNEXPECTED-001",
+  "classification": "UNEXPECTED_DOWN",
+  "incident_candidate": true,
+  "expected_state": {
+    "expected_down_peers": [],
+    "unexpected_down_peers": ["idx03"]
+  }
+}

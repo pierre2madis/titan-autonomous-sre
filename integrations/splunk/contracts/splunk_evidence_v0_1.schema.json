@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TITAN Splunk Indexer Cluster Evidence v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source",
+    "target",
+    "domain",
+    "event_id",
+    "classification",
+    "incident_candidate",
+    "expected_state"
+  ],
+  "properties": {
+    "source": {
+      "const": "SPLUNK"
+    },
+    "target": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,128}$"
+    },
+    "domain": {
+      "const": "INDEXER_CLUSTER"
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^TITAN-[A-Za-z0-9-]{1,250}$"
+    },
+    "classification": {
+      "enum": ["EXPECTED_DOWN", "UNEXPECTED_DOWN", "UNKNOWN"]
+    },
+    "incident_candidate": {
+      "type": "boolean"
+    },
+    "expected_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_down_peers",
+        "unexpected_down_peers"
+      ],
+      "properties": {
+        "expected_down_peers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]+$"
+          },
+          "uniqueItems": true
+        },
+        "unexpected_down_peers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]+$"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "classification": {"const": "EXPECTED_DOWN"}
+        }
+      },
+      "then": {
+        "properties": {
+          "incident_candidate": {"const": false},
+          "expected_state": {
+            "properties": {
+              "expected_down_peers": {"minItems": 1},
+              "unexpected_down_peers": {"maxItems": 0}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "classification": {"const": "UNEXPECTED_DOWN"}
+        }
+      },
+      "then": {
+        "properties": {
+          "incident_candidate": {"const": true},
+          "expected_state": {
+            "properties": {
+              "expected_down_peers": {"maxItems": 0},
+              "unexpected_down_peers": {"minItems": 1}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "classification": {"const": "UNKNOWN"}
+        }
+      },
+      "then": {
+        "properties": {
+          "incident_candidate": {"const": false}
+        }
+      }
+    }
+  ]
+}
