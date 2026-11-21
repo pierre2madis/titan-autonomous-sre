@@ -29,7 +29,7 @@ jq -e '
   and (.event_id | type) == "string"
   and (.event_id | test("^TITAN-[A-Za-z0-9-]{1,250}$"))
   and (.classification |
-       IN("EXPECTED_DOWN", "UNEXPECTED_DOWN", "UNKNOWN"))
+       IN("HEALTHY", "EXPECTED_DOWN", "UNEXPECTED_DOWN", "UNKNOWN"))
   and (.incident_candidate | type) == "boolean"
   and (.expected_state | type) == "object"
   and (.expected_state.expected_down_peers | type) == "array"
@@ -46,9 +46,13 @@ jq -e '
     elif .classification == "UNEXPECTED_DOWN" then
       .incident_candidate == true
       and (.expected_state.unexpected_down_peers | length) > 0
+    elif .classification == "HEALTHY" then
+      .incident_candidate == false
       and (.expected_state.expected_down_peers | length) == 0
+      and (.expected_state.unexpected_down_peers | length) == 0
     else
       .incident_candidate == false
+      and (.expected_state.unexpected_down_peers | length) == 0
     end
   )
 ' "$input" >/dev/null || {
@@ -59,6 +63,11 @@ jq -e '
 classification=$(jq -r '.classification' "$input")
 
 case "$classification" in
+  HEALTHY)
+    echo "INCIDENT_CANDIDATE=NO"
+    echo "REASON=HEALTHY"
+    exit 0
+    ;;
   EXPECTED_DOWN)
     echo "INCIDENT_CANDIDATE=NO"
     echo "REASON=EXPECTED_DOWN"

@@ -1,0 +1,13 @@
+{
+  "policy_version": "0.2",
+  "cluster_manager": "us02",
+  "expected_peers": [
+    "idx01",
+    "idx02",
+    "idx03"
+  ],
+  "expected_down_peers": [],
+  "max_evidence_age_seconds": 120,
+  "unknown_state_incident_candidate": false,
+  "execution_mode": "OFFLINE_READ_ONLY"
+}
