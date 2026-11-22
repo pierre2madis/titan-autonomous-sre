@@ -1,3 +1,4 @@
+import SplunkClusterHealth from './SplunkClusterHealth'
 import IntegrationEvidence from "./IntegrationEvidence";
 import HistoricalEvidence from './HistoricalEvidence'
 import PipelineCorrelation from "./PipelineCorrelation";
@@ -279,6 +280,7 @@ function App() {
         </section>}
         {view === 'health' && <>
           <PlatformHealth />
+            <SplunkClusterHealth />
           <CorePipeline />
           <WorkerHealth />
           <PipelineCorrelation />

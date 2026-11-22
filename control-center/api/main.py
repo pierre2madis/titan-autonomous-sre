@@ -1,3 +1,4 @@
+from api.splunk_evidence import router as splunk_evidence_router
 from api.historical_evidence import router as historical_evidence_router
 from api.integration_evidence import router as integration_evidence_router
 from api.incident_rca import router as incident_rca_router
@@ -40,6 +41,7 @@ app.include_router(incident_rca_router)
 app.include_router(incident_lifecycle_router)
 app.include_router(historical_evidence_router)
 app.include_router(integration_evidence_router)
+app.include_router(splunk_evidence_router)
 
 @app.get("/api/v1/health")
 def health():
