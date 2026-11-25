@@ -16,6 +16,7 @@ from api.database import database_connection
 
 
 from api.incident_lifecycle import router as incident_lifecycle_router
+from api.incident_evidence import router as incident_evidence_router
 
 app = FastAPI(
     title="TITAN Control Center API",
@@ -42,6 +43,7 @@ app.include_router(incident_lifecycle_router)
 app.include_router(historical_evidence_router)
 app.include_router(integration_evidence_router)
 app.include_router(splunk_evidence_router)
+app.include_router(incident_evidence_router)
 
 @app.get("/api/v1/health")
 def health():

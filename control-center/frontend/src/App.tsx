@@ -9,6 +9,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { titanAPI } from './api/client'
 import type { Incident, Timeline } from './api/types'
 import IncidentRCA from './IncidentRCA'
+import IncidentEvidence from './IncidentEvidence'
 import IncidentLifecycle from './IncidentLifecycle'
 import OperationalIncidents from './OperationalIncidents'
 import './App.css'
@@ -261,9 +262,32 @@ function App() {
         </section>
 
         {view === 'incidents' && selected && <IncidentRCA incidentId={selected.incident_id} />}
+        {view === 'incidents' && selected && <IncidentEvidence incidentId={selected.incident_id} />}
         </>}
         {view === 'incidents' && <OperationalIncidents selectedIncidentId={selected?.incident_id ?? ""} onSelectIncident={handleOperationalSelection} />}
         {view === 'incidents' && <IncidentLifecycle />}
+
+        {view === 'evidence' &&
+          import.meta.env.VITE_TITAN_OFFLINE_INCIDENT_ID && (
+          <section className="panel titan-view-panel">
+            <div className="panel-header">
+              <h2>Offline Incident Investigation</h2>
+              <span>DEMO · READ ONLY</span>
+            </div>
+            <div className="details">
+              <p>
+                Offline evidence is independent of the operational
+                incident database. Causality remains unverified.
+              </p>
+              <IncidentEvidence
+                incidentId={
+                  import.meta.env.VITE_TITAN_OFFLINE_INCIDENT_ID
+                }
+              />
+            </div>
+          </section>
+        )}
+
         {view === 'evidence' && <section className="panel titan-view-panel">
           <div className="panel-header"><h2>{t('Evidence Explorer')}</h2><span>{t('READ-ONLY MODE')}</span></div>
           <div className="details">
@@ -276,6 +300,7 @@ function App() {
               {incidents.map(i => <option key={i.incident_id} value={i.incident_id}>{i.incident_id}</option>)}
             </select>
             {selected && <IncidentRCA incidentId={selected.incident_id} />}
+            {selected && <IncidentEvidence incidentId={selected.incident_id} />}
           </div>
         </section>}
         {view === 'health' && <>
