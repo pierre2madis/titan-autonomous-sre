@@ -23,11 +23,16 @@ function formatDate(value: string | null, locale: string): string {
 
 function App() {
   const { t, locale } = useLanguage()
-  type View = 'overview' | 'incidents' | 'evidence' | 'health' | 'automation'
+  type View = 'overview' | 'incidents' | 'investigation' | 'evidence' | 'health' | 'automation'
   const [view, setView] = useState<View>('overview')
+    const [investigationMode, setInvestigationMode] =
+      useState<'operational' | 'offline'>('offline')
+    const offlineIncidentId =
+      import.meta.env.VITE_TITAN_OFFLINE_INCIDENT_ID || ''
   const navigation: { id: View; icon: string; label: string }[] = [
     { id: 'overview', icon: '◉', label: 'Overview' },
     { id: 'incidents', icon: '▤', label: 'Incidents' },
+      { id: 'investigation', icon: '⌕', label: 'Incident Investigation' },
     { id: 'evidence', icon: '◇', label: 'Evidence Explorer' },
     { id: 'health', icon: '▣', label: 'Platform Health' },
     { id: 'automation', icon: '⚙', label: 'Automation' },
@@ -270,6 +275,102 @@ function App() {
               key={selectedIncidentId}
               incidentId={selectedIncidentId}
             />
+          )}
+
+          {view === 'investigation' && (
+            <section className="panel titan-view-panel">
+              <div className="panel-header">
+                <h2>Incident Investigation</h2>
+                <span>READ ONLY</span>
+              </div>
+              <div className="details">
+                <p>
+                  Investigate operational incidents or review offline
+                  evidence. Offline causality is not verified.
+                </p>
+                <div
+                  role="group"
+                  aria-label="Investigation source"
+                  style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}
+                >
+                  <button
+                    type="button"
+                    aria-pressed={investigationMode === 'operational'}
+                    onClick={() => setInvestigationMode('operational')}
+                  >
+                    Operational
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={investigationMode === 'offline'}
+                    onClick={() => setInvestigationMode('offline')}
+                    disabled={!offlineIncidentId}
+                  >
+                    Offline Demo
+                  </button>
+                </div>
+
+                {investigationMode === 'operational' && (
+                  <>
+                    <p>Operational data depends on the live API.</p>
+                    <label htmlFor="titan-investigation-incident">
+                      Incident
+                    </label>
+                    <select
+                      id="titan-investigation-incident"
+                      className="titan-view-select"
+                      value={selected?.incident_id ?? ''}
+                      onChange={event =>
+                        setSelected(
+                          incidents.find(
+                            item => item.incident_id === event.target.value
+                          ) ?? null
+                        )
+                      }
+                    >
+                      {incidents.length === 0 && (
+                        <option value="">No operational incidents available</option>
+                      )}
+                      {incidents.map(item => (
+                        <option key={item.incident_id} value={item.incident_id}>
+                          {item.incident_id}
+                        </option>
+                      ))}
+                    </select>
+                    {incidentsError && (
+                      <div className="error" role="alert">
+                        {incidentsError}
+                      </div>
+                    )}
+                    {selected ? (
+                      <>
+                        <IncidentRCA incidentId={selected.incident_id} />
+                        <IncidentEvidence incidentId={selected.incident_id} />
+                      </>
+                    ) : (
+                      <p className="empty">No operational incident selected.</p>
+                    )}
+                  </>
+                )}
+
+                {investigationMode === 'offline' && (
+                  offlineIncidentId ? (
+                    <>
+                      <p>
+                        Offline demonstration · read-only · causality
+                        unverified · no remediation.
+                      </p>
+                      <IncidentLifecycle incidentId={offlineIncidentId} />
+                      <IncidentEvidence incidentId={offlineIncidentId} />
+                    </>
+                  ) : (
+                    <p className="empty">
+                      Offline demo is not configured for this build.
+                    </p>
+                  )
+                )}
+              </div>
+            </section>
           )}
 
         {view === 'evidence' &&
