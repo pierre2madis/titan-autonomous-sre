@@ -31,6 +31,28 @@ jobs:
             --tag titan-control-center-api:ci \
             control-center
 
+      - name: Build offline incident frontend image
+        env:
+          TITAN_CI_OFFLINE_INCIDENT_ID: INC-4BD65636F6FDB7A3
+        run: |
+          docker build \
+            --file control-center/deploy/Dockerfile.frontend \
+            --build-arg VITE_TITAN_OFFLINE_INCIDENT_ID="$TITAN_CI_OFFLINE_INCIDENT_ID" \
+            --tag titan-control-center-frontend:offline-ci \
+            control-center
+
+      - name: Verify offline incident frontend bundle
+        env:
+          TITAN_CI_OFFLINE_INCIDENT_ID: INC-4BD65636F6FDB7A3
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            --entrypoint sh \
+            -e TITAN_CI_OFFLINE_INCIDENT_ID \
+            titan-control-center-frontend:offline-ci \
+            -c 'grep -R -F -q "$TITAN_CI_OFFLINE_INCIDENT_ID" /usr/share/nginx/html/assets'
+          echo "OFFLINE_INCIDENT_BUNDLE=PASS"
+
       - name: Build frontend image
         run: |
           docker build \
