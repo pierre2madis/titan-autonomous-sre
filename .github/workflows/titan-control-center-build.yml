@@ -44,3 +44,18 @@ jobs:
             titan-control-center-api:ci \
             titan-control-center-frontend:ci \
             --format '{{.RepoTags}} {{.Id}}'
+
+      - name: Docker runtime smoke test
+        env:
+          TITAN_TEST_API_IMAGE: titan-control-center-api:ci
+          TITAN_TEST_FRONTEND_IMAGE: titan-control-center-frontend:ci
+          TITAN_TEST_HTTP_IMAGE: curlimages/curl:8.12.1
+          TITAN_TEST_PORT: "8080"
+          TITAN_TEST_TIMEOUT_SECONDS: "60"
+          TITAN_TEST_POLL_SECONDS: "2"
+          TITAN_TEST_POSTGRES_HOST: 127.0.0.1
+          TITAN_TEST_POSTGRES_PORT: "5432"
+          TITAN_TEST_POSTGRES_DB: titan_ci
+          TITAN_TEST_POSTGRES_USER: titan_ci
+        run: |
+          bash control-center/scripts/smoke-test.sh
