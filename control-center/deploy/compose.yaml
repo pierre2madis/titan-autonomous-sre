@@ -1,0 +1,35 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.api
+    environment:
+      TITAN_POSTGRES_HOST: ${TITAN_POSTGRES_HOST:?required}
+      TITAN_POSTGRES_PORT: ${TITAN_POSTGRES_PORT:?required}
+      TITAN_POSTGRES_DB: ${TITAN_POSTGRES_DB:?required}
+      TITAN_POSTGRES_USER: ${TITAN_POSTGRES_USER:?required}
+      TITAN_POSTGRES_PASSWORD_FILE: /run/secrets/titan_postgres_password
+      PGSSLMODE: ${PGSSLMODE:-prefer}
+      TITAN_KAFKA_BROKER: ${TITAN_KAFKA_BROKER:-}
+      TITAN_OFFLINE_INCIDENT_FILE: ${TITAN_OFFLINE_INCIDENT_FILE:-}
+      TITAN_OFFLINE_CORRELATION_INPUT_FILE: ${TITAN_OFFLINE_CORRELATION_INPUT_FILE:-}
+      TITAN_SPLUNK_EVIDENCE_FILE: ${TITAN_SPLUNK_EVIDENCE_FILE:-}
+      TITAN_SPLUNK_MAX_EVIDENCE_AGE_SECONDS: ${TITAN_SPLUNK_MAX_EVIDENCE_AGE_SECONDS:-300}
+      TITAN_OUTBOX_BACKLOG_THRESHOLD_SECONDS: ${TITAN_OUTBOX_BACKLOG_THRESHOLD_SECONDS:-300}
+    secrets:
+      - titan_postgres_password
+    restart: "no"
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.frontend
+    ports:
+      - "${TITAN_UI_BIND_HOST:-127.0.0.1}:${TITAN_UI_PORT:-15182}:8080"
+    depends_on:
+      - api
+    restart: "no"
+
+secrets:
+  titan_postgres_password:
+    file: ${TITAN_POSTGRES_PASSWORD_HOST_FILE:?required}

@@ -50,12 +50,20 @@ export default function SplunkClusterHealth() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const controller = new AbortController()
+    let active = true
+    let controller: AbortController | null = null
 
     async function loadEvidence() {
+      if (!active || controller || document.hidden) {
+        return
+      }
+
+      const request = new AbortController()
+      controller = request
+
       try {
         const response = await fetch(endpoint, {
-          signal: controller.signal,
+          signal: request.signal,
           cache: 'no-store',
         })
 
@@ -77,25 +85,52 @@ export default function SplunkClusterHealth() {
           throw new Error('Invalid Splunk evidence response')
         }
 
-        if (!controller.signal.aborted) {
+        if (active && !request.signal.aborted) {
           setData(result)
           setError(null)
         }
       } catch (err) {
-        if (!controller.signal.aborted) {
+        if (active && !request.signal.aborted) {
           setData(null)
           setError(String(err))
         }
       } finally {
-        if (!controller.signal.aborted) {
+        if (controller === request) {
+          controller = null
+        }
+
+        if (active && !request.signal.aborted) {
           setLoading(false)
         }
       }
     }
 
+    function handleVisibilityChange() {
+      if (!document.hidden) {
+        void loadEvidence()
+      }
+    }
+
     void loadEvidence()
 
-    return () => controller.abort()
+    const interval = window.setInterval(() => {
+      void loadEvidence()
+    }, 30_000)
+
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange,
+    )
+
+    return () => {
+      active = false
+      window.clearInterval(interval)
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange,
+      )
+      controller?.abort()
+    }
   }, [])
 
   const effectiveStatus: Classification =
@@ -105,7 +140,7 @@ export default function SplunkClusterHealth() {
     <section className="panel" style={{ marginBottom: 20 }}>
       <div className="panel-header">
         <h2>Splunk Cluster Health</h2>
-        <span>READ-ONLY · SNAPSHOT</span>
+        <span>READ-ONLY · AUTO-REFRESH 30s</span>
       </div>
 
       {loading && <p>Loading Splunk evidence...</p>}
@@ -178,7 +213,7 @@ export default function SplunkClusterHealth() {
           )}
 
           <small>
-            Snapshot-based monitoring. No live Splunk query or
+            Automatically refreshed evidence. No live Splunk query or
             remediation is performed by this component.
           </small>
         </div>

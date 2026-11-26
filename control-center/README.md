@@ -1,62 +1,91 @@
-# TITAN Autonomous SRE — Control Center
+# TITAN Control Center
 
-## Overview
+Unified observability and incident investigation interface for
+the TITAN Autonomous SRE platform.
 
-TITAN Control Center is a read-only operational interface
-for exploring incidents, observing event-processing health,
-and correlating evidence across PostgreSQL and Redpanda.
+## Components
 
-The project demonstrates evidence-driven SRE engineering:
-operational health is not inferred solely from empty queues
-or zero consumer lag.
+- React / TypeScript frontend
+- FastAPI backend
+- PostgreSQL incident persistence
+- Kafka integration evidence
+- Splunk evidence integration
+- Incident lifecycle and RCA presentation
 
-## Architecture
+## Current status
 
-- Frontend: React, TypeScript, Vite
-- Backend: FastAPI
-- Database: PostgreSQL
-- Event streaming: Redpanda (Kafka API)
-- Evidence model: read-only health collectors
-- Correlation: health, activity and confidence
+This is a local distribution candidate, not a production release.
 
-## Implemented capabilities
+The validated laboratory preview uses an isolated unified API
+and React frontend.
 
-- Incident list and incident details
-- Incident timeline
-- Platform health
-- Core pipeline evidence
-- Kafka consumer group health
-- Consumer lag monitoring
-- Pipeline health correlation
-- Operational assessment
+## Safety and evidence limitations
 
-## Operational assessment
+- Read-only preview
+- No automatic remediation
+- RCA causality may remain unverified
+- UNKNOWN and DEGRADED states must not be presented as healthy
+- Worker and correlation evidence may be unavailable
 
-The platform distinguishes:
+## Configuration
 
-- Health: HEALTHY, DEGRADED, UNKNOWN
-- Activity: NO_BACKLOG_OBSERVED, BACKLOG_OBSERVED, UNKNOWN
-- Confidence: HIGH, MODERATE, LIMITED
+See `deploy/.env.example`.
 
-A zero backlog does not automatically imply operational readiness.
+Environment-specific network addresses, credentials, paths
+and service endpoints must be supplied externally.
 
-## Security model
+## Validation
 
-The current development environment uses loopback-bound
-API and frontend services.
+Run:
 
-Database evidence queries use read-only sessions.
+    bash scripts/validate-package.sh
 
-Kafka health collectors inspect metadata and offsets
-without consuming messages or committing offsets.
+## Deployment
 
-Production authentication, authorization, TLS and
-deployment hardening are not yet implemented.
+Docker deployment files and runtime dependency locks are
+pending validation.
 
-## Project status
+Do not assume this candidate is production-ready.
 
-Control Center v0.1.0 is a development-stage
-technical portfolio increment.
+## Vite proxy configuration
 
-It is not presented as a production-ready
-incident management platform.
+TITAN Control Center separates development proxy destinations from
+container build configuration.
+
+### Local development
+
+The Vite development configurations require explicit HTTP(S) targets:
+
+| Variable | Purpose |
+|---|---|
+| `TITAN_VITE_GENERAL_API_TARGET` | General FastAPI backend |
+| `TITAN_VITE_SPLUNK_API_TARGET` | Splunk evidence API |
+| `TITAN_VITE_LIFECYCLE_API_TARGET` | Incident lifecycle API in demo mode |
+
+Example (replace the placeholders with environment-specific URLs):
+
+```bash
+export TITAN_VITE_GENERAL_API_TARGET="http://general-api.example.invalid:8080"
+export TITAN_VITE_SPLUNK_API_TARGET="http://splunk-api.example.invalid:8080"
+export TITAN_VITE_LIFECYCLE_API_TARGET="http://lifecycle-api.example.invalid:8080"
+```
+
+The `.invalid` domain is illustrative and is not a reachable endpoint.
+
+### Portable Docker build
+
+The portable Vite configuration uses:
+
+| Variable | Purpose |
+|---|---|
+| `TITAN_API_PROXY_TARGET` | General API target for Vite proxy configuration |
+| `TITAN_SPLUNK_PROXY_TARGET` | Splunk API target for Vite proxy configuration |
+
+The Docker frontend build supplies these variables using configurable
+build arguments. They are build-time placeholders, not operational
+backend destinations.
+
+Runtime API routing is handled separately by the Nginx configuration
+and deployment environment.
+
+Do not store passwords, tokens, or private keys in build arguments.
