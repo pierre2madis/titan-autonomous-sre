@@ -284,6 +284,11 @@ function App() {
                 Offline evidence is independent of the operational
                 incident database. Causality remains unverified.
               </p>
+              <IncidentLifecycle
+                incidentId={
+                  import.meta.env.VITE_TITAN_OFFLINE_INCIDENT_ID
+                }
+              />
               <IncidentEvidence
                 incidentId={
                   import.meta.env.VITE_TITAN_OFFLINE_INCIDENT_ID

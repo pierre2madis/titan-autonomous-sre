@@ -31,6 +31,46 @@ jobs:
             --tag titan-control-center-api:ci \
             control-center
 
+      - name: Build offline incident frontend image
+        env:
+          TITAN_CI_OFFLINE_INCIDENT_ID: INC-4BD65636F6FDB7A3
+        run: |
+          docker build \
+            --file control-center/deploy/Dockerfile.frontend \
+            --build-arg VITE_TITAN_OFFLINE_INCIDENT_ID="$TITAN_CI_OFFLINE_INCIDENT_ID" \
+            --tag titan-control-center-frontend:offline-ci \
+            control-center
+
+      - name: Verify offline incident frontend bundle
+        env:
+          TITAN_CI_OFFLINE_INCIDENT_ID: INC-4BD65636F6FDB7A3
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            --entrypoint sh \
+            -e TITAN_CI_OFFLINE_INCIDENT_ID \
+            titan-control-center-frontend:offline-ci \
+            -c 'grep -R -F -q "$TITAN_CI_OFFLINE_INCIDENT_ID" /usr/share/nginx/html/assets'
+          echo "OFFLINE_INCIDENT_BUNDLE=PASS"
+
+      - name: Export offline frontend static assets
+        run: |
+          set -euo pipefail
+          container_id="$(docker create titan-control-center-frontend:offline-ci)"
+          trap 'docker rm -f "$container_id" >/dev/null 2>&1 || true' EXIT
+          mkdir -p "$RUNNER_TEMP/titan-offline-frontend-dist"
+          docker cp "$container_id:/usr/share/nginx/html/." \
+            "$RUNNER_TEMP/titan-offline-frontend-dist/"
+          test -s "$RUNNER_TEMP/titan-offline-frontend-dist/index.html"
+
+      - name: Upload offline frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: titan-offline-frontend-dist
+          path: ${{ runner.temp }}/titan-offline-frontend-dist/
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Build frontend image
         run: |
           docker build \

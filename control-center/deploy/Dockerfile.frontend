@@ -11,9 +11,11 @@ COPY deploy/vite.portable.config.mjs ./vite.portable.config.mjs
 
 ARG TITAN_BUILD_API_TARGET=http://127.0.0.1:18080
 ARG TITAN_BUILD_SPLUNK_TARGET=http://127.0.0.1:18081
+ARG VITE_TITAN_OFFLINE_INCIDENT_ID=""
 
 RUN TITAN_API_PROXY_TARGET="$TITAN_BUILD_API_TARGET" \
     TITAN_SPLUNK_PROXY_TARGET="$TITAN_BUILD_SPLUNK_TARGET" \
+    VITE_TITAN_OFFLINE_INCIDENT_ID="$VITE_TITAN_OFFLINE_INCIDENT_ID" \
     npm run build -- --config vite.portable.config.mjs
 
 FROM nginx:stable-alpine
