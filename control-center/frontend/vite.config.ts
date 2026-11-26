@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 
-function requireTarget(name) {
+function requireTarget(name: string) {
   const value = process.env[name]
   if (!value) {
     throw new Error(`${name} is required`)
