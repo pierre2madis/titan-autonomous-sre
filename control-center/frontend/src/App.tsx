@@ -265,7 +265,12 @@ function App() {
         {view === 'incidents' && selected && <IncidentEvidence incidentId={selected.incident_id} />}
         </>}
         {view === 'incidents' && <OperationalIncidents selectedIncidentId={selected?.incident_id ?? ""} onSelectIncident={handleOperationalSelection} />}
-        {view === 'incidents' && <IncidentLifecycle />}
+        {view === 'incidents' && selectedIncidentId && (
+            <IncidentLifecycle
+              key={selectedIncidentId}
+              incidentId={selectedIncidentId}
+            />
+          )}
 
         {view === 'evidence' &&
           import.meta.env.VITE_TITAN_OFFLINE_INCIDENT_ID && (

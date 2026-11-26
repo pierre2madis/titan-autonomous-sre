@@ -1,6 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+
+function requireTarget(name) {
+  const value = process.env[name]
+  if (!value) {
+    throw new Error(`${name} is required`)
+  }
+  const parsed = new URL(value)
+  if (!['http:', 'https:'].includes(parsed.protocol)) {
+    throw new Error(`${name} must be an HTTP(S) URL`)
+  }
+  return parsed.origin
+}
+
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -9,11 +23,15 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '^/api/v1/incidents/[^/]+/lifecycle(?:\\?.*)?$': {
-        target: 'http://127.0.0.1:8089',
+        target: requireTarget('TITAN_VITE_LIFECYCLE_API_TARGET'),
+        changeOrigin: false,
+      },
+      '^/api/v1/splunk/cluster/evidence(?:\\?.*)?$': {
+        target: requireTarget('TITAN_VITE_SPLUNK_API_TARGET'),
         changeOrigin: false,
       },
       '/api': {
-        target: 'http://127.0.0.1:8088',
+        target: requireTarget('TITAN_VITE_GENERAL_API_TARGET'),
         changeOrigin: false,
       },
     },

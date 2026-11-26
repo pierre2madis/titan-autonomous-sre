@@ -21,9 +21,11 @@ interface LifecycleResponse {
   }
 }
 
-const DEMO_INCIDENT_ID = 'INC-4BD65636F6FDB7A3'
-
-export default function IncidentLifecycle() {
+export default function IncidentLifecycle({
+  incidentId
+}: {
+  incidentId: string
+}) {
   const [data, setData] = useState<LifecycleResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -31,10 +33,14 @@ export default function IncidentLifecycle() {
   useEffect(() => {
     const controller = new AbortController()
 
+    setData(null)
+    setError(null)
+    setLoading(true)
+
     async function load() {
       try {
         const response = await fetch(
-          `/api/v1/incidents/${encodeURIComponent(DEMO_INCIDENT_ID)}/lifecycle`,
+          `/api/v1/incidents/${encodeURIComponent(incidentId)}/lifecycle`,
           { signal: controller.signal }
         )
 
@@ -49,7 +55,8 @@ export default function IncidentLifecycle() {
         const result: LifecycleResponse = await response.json()
 
         if (
-          result.incident_id !== DEMO_INCIDENT_ID ||
+          result.incident_id !== incidentId ||
+            result.event?.incident_id !== incidentId ||
           result.mode !== 'OFFLINE_READ_ONLY' ||
           result.event?.event_type !== 'INCIDENT_CREATED' ||
           result.event?.causality_verified !== false ||
@@ -70,7 +77,7 @@ export default function IncidentLifecycle() {
 
     void load()
     return () => controller.abort()
-  }, [])
+  }, [incidentId])
 
   return (
     <section

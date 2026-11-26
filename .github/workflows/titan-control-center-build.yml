@@ -1,0 +1,46 @@
+name: TITAN Control Center Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "control-center/**"
+      - ".github/workflows/titan-control-center-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate package
+        run: |
+          bash control-center/scripts/validate-package.sh
+          bash control-center/scripts/validate-docker-package.sh
+
+      - name: Build API image
+        run: |
+          docker build \
+            --file control-center/deploy/Dockerfile.api \
+            --tag titan-control-center-api:ci \
+            control-center
+
+      - name: Build frontend image
+        run: |
+          docker build \
+            --file control-center/deploy/Dockerfile.frontend \
+            --tag titan-control-center-frontend:ci \
+            control-center
+
+      - name: Inspect built images
+        run: |
+          docker image inspect \
+            titan-control-center-api:ci \
+            titan-control-center-frontend:ci \
+            --format '{{.RepoTags}} {{.Id}}'
